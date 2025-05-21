@@ -7,8 +7,8 @@
         const characterSelect = document.getElementById('characterSelect');
         let selectedCharacter = 'sung';
 
-        const GAME_WIDTH = 800;
-        const GAME_HEIGHT = 400;
+        const GAME_WIDTH = Math.floor(window.innerWidth * 0.9);
+        const GAME_HEIGHT = Math.floor(window.innerHeight * 0.75);
         canvas.width = GAME_WIDTH;
         canvas.height = GAME_HEIGHT;
         gameContainer.style.width = `${GAME_WIDTH}px`;
