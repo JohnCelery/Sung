@@ -238,11 +238,16 @@
             } else if (p.imgKey === 'platformTexture2') {
                 scale = 1.3; // police (slightly smaller)
             }
-            p.displayWidth = 128 * scale;
-            p.displayHeight = 64 * scale;
+
+            const img = assets[p.imgKey];
+            const natW = (img && img.complete && img.naturalWidth) ? img.naturalWidth : 128;
+            const natH = (img && img.complete && img.naturalHeight) ? img.naturalHeight : 64;
+
+            p.displayWidth = natW * scale;
+            p.displayHeight = natH * scale;
             p.width = p.displayWidth;
             p.height = p.displayHeight; // hitbox matches sprite size
-            p.anchorX = 0.5;
+            p.anchorX = 0; // align top-left for accurate hitbox
             p.anchorY = 0;
             p.y = GROUND_LEVEL - p.displayHeight; // bottom aligned with ground
         }
