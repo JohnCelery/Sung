@@ -256,8 +256,28 @@
             loadImage(platformTexture2Url, 'platformTexture2', platformTexture2Placeholder);
         }
 
-        function createTenant(x, y, patrolDistance) { return { type: 'tenant', x, y: y - TENANT_HEIGHT, width: TENANT_WIDTH, height: TENANT_HEIGHT, img: null, dx: 1, speed: 1, patrolStart: x, patrolEnd: x + patrolDistance, isAlive: true, colorBody: '#3498db', colorPants: '#2980b9', colorFace: '#F5DEB3' }; }
-        function createJudge(x, y) { return { type: 'judge', x, y: y - JUDGE_HEIGHT, width: JUDGE_WIDTH, height: JUDGE_HEIGHT, imgUp: null, imgDown: null, gavelUp: false, gavelTimer: 0, gavelCycle: 120, isAlive: true, robeColor: '#6a0dad', faceColor: '#E0B0FF' }; } 
+        function createTenant(x, y, patrolDistance) {
+            return {
+                type: 'tenant', x, y: y - TENANT_HEIGHT,
+                width: TENANT_WIDTH, height: TENANT_HEIGHT,
+                img: null, dx: 1, speed: 1,
+                patrolStart: x, patrolEnd: x + patrolDistance,
+                isAlive: true,
+                colorBody: '#3498db', colorPants: '#2980b9', colorFace: '#F5DEB3',
+                lastDamageTime: -Infinity
+            };
+        }
+
+        function createJudge(x, y) {
+            return {
+                type: 'judge', x, y: y - JUDGE_HEIGHT,
+                width: JUDGE_WIDTH, height: JUDGE_HEIGHT,
+                imgUp: null, imgDown: null,
+                gavelUp: false, gavelTimer: 0, gavelCycle: 120,
+                isAlive: true, robeColor: '#6a0dad', faceColor: '#E0B0FF',
+                lastDamageTime: -Infinity
+            };
+        }
         
         function createPlatform(x, y, width, height, imgKey = 'platformTexture1') {
             return { x, y, width, height, img: assets[imgKey], imgKey: imgKey, color: null };
@@ -461,8 +481,9 @@
         }
         function updatePlayer() { if (!player.isAlive) return; if (keys.left) player.dx = -player.speed; else if (keys.right) player.dx = player.speed; else player.dx = 0; player.x += player.dx; if (player.x < 0) player.x = 0; if (player.x + player.width > WORLD_WIDTH) player.x = WORLD_WIDTH - player.width; if (keys.up && player.isOnGround && !player.isJumping) { player.dy = -player.jumpPower; player.isJumping = true; player.isOnGround = false; } player.dy += GRAVITY; player.y += player.dy; player.isOnGround = false; platforms.forEach(platform => { if (player.x < platform.x + platform.width && player.x + player.width > platform.x && player.y < platform.y + platform.height && player.y + player.height > platform.y) { const prevPlayerBottom = player.y + player.height - player.dy; if (player.dy > 0 && prevPlayerBottom <= platform.y) { player.y = platform.y - player.height; player.dy = 0; player.isJumping = false; player.isOnGround = true; } else if (player.dy < 0 && (player.y - player.dy) >= (platform.y + platform.height)) { player.y = platform.y + platform.height; player.dy = 0; } else if (player.dx > 0 && (player.x + player.width - player.dx) <= platform.x) { player.x = platform.x - player.width; } else if (player.dx < 0 && (player.x - player.dx) >= (platform.x + platform.width)) { player.x = platform.x + platform.width; } } }); if (player.y + player.height > GAME_HEIGHT + 100) setGameOver("FELL INTO OBLIVION!"); }
         function updateEnemies() { enemies.forEach(enemy => { if (!enemy.isAlive) return; if (enemy.type === 'tenant') { enemy.x += enemy.dx * enemy.speed; if (enemy.x <= enemy.patrolStart || enemy.x + enemy.width >= enemy.patrolEnd) enemy.dx *= -1; let onPlatform = false; for (let platform of platforms) { if (enemy.x + enemy.width > platform.x && enemy.x < platform.x + platform.width && enemy.y + enemy.height >= platform.y && enemy.y + enemy.height <= platform.y + 10) { enemy.y = platform.y - enemy.height; onPlatform = true; break; } } } else if (enemy.type === 'judge') { enemy.gavelTimer++; if (enemy.gavelTimer >= enemy.gavelCycle) { enemy.gavelTimer = 0; enemy.gavelUp = !enemy.gavelUp; } } }); }
-        function checkCollisions() {
-            if (!player.isAlive) return;
+       function checkCollisions() {
+           if (!player.isAlive) return;
+            const now = performance.now();
             enemies.forEach((enemy) => {
                 if (!enemy.isAlive) return;
                 if (player.x < enemy.x + enemy.width &&
@@ -490,13 +511,19 @@
                                 player.dy = -player.jumpPower / 1.5;
                             } else {
                                 const msg = judgeHitMessages[Math.floor(Math.random() * judgeHitMessages.length)];
-                                loseHealth(msg, 'otsc_granted');
+                                if (now - enemy.lastDamageTime > 1000) {
+                                    loseHealth(msg, 'otsc_granted');
+                                    enemy.lastDamageTime = now;
+                                }
                             }
                         }
                     } else {
                         if (enemy.type === 'tenant') {
                             const msg = tenantHitMessages[Math.floor(Math.random() * tenantHitMessages.length)];
-                            loseHealth(msg, 'hardship');
+                            if (now - enemy.lastDamageTime > 1000) {
+                                loseHealth(msg, 'hardship');
+                                enemy.lastDamageTime = now;
+                            }
                             if (player.x + player.width / 2 < enemy.x + enemy.width / 2) {
                                 player.x = enemy.x - player.width;
                             } else {
@@ -504,7 +531,10 @@
                             }
                         } else if (enemy.type === 'judge') {
                             const msg = judgeHitMessages[Math.floor(Math.random() * judgeHitMessages.length)];
-                            loseHealth(msg, 'otsc_granted');
+                            if (now - enemy.lastDamageTime > 1000) {
+                                loseHealth(msg, 'otsc_granted');
+                                enemy.lastDamageTime = now;
+                            }
                             if (player.x + player.width / 2 < enemy.x + enemy.width / 2) {
                                 player.x = enemy.x - player.width;
                             } else {
