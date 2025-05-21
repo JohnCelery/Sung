@@ -81,7 +81,18 @@
             background-color: rgba(0,0,0,0.7);
             padding: 20px;
             border-radius: 8px;
-            z-index: 300; 
+            z-index: 300;
+        }
+
+        #healthDisplay {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 16px;
+            background-color: rgba(0,0,0,0.6);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 250;
         }
         @keyframes fadeOutMessage {
             0% { opacity: 1; transform: translateY(0); }
@@ -94,6 +105,7 @@
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
         <div id="loadingMessage" style="display: none;">Loading Assets...</div>
+        <div id="healthDisplay">Health: 1</div>
     </div>
     <div id="instructions">
         <h2>How to Play Sung's Eviction Adventure:</h2>
@@ -105,6 +117,7 @@
         const ctx = canvas.getContext('2d');
         const gameContainer = document.getElementById('gameContainer');
         const loadingMessageElement = document.getElementById('loadingMessage');
+        const healthDisplay = document.getElementById('healthDisplay');
 
         const GAME_WIDTH = 800;
         const GAME_HEIGHT = 400;
@@ -131,7 +144,10 @@
 
         let player = {
             x: 50, y: GROUND_LEVEL - 40,
-            width: 30, height: 40, 
+            width: 30, height: 40,
+            baseWidth: 30, baseHeight: 40,
+            scale: 1,
+            health: 1, maxHealth: 4,
             dx: 0, dy: 0, speed: 4, jumpPower: 12,
             isJumping: false, isOnGround: true,
             img: null, isAlive: true
@@ -317,10 +333,17 @@
 
         function initGame() {
             player.img = assets.playerImage;
+            player.baseWidth = 30;
+            player.baseHeight = 40;
+            player.scale = 1;
+            player.health = 1;
+            player.width = player.baseWidth;
+            player.height = player.baseHeight;
             player.x = 50; player.y = GROUND_LEVEL - player.height;
             player.dx = 0; player.dy = 0;
             player.isJumping = false; player.isOnGround = true;
             player.isAlive = true;
+            updateHealthDisplay();
             if (!assets.platformTexture1) {
                 assets.platformTexture1 = createFallbackPlatformPattern1();
             }
@@ -393,9 +416,83 @@
 
         function restartGame() { initGame(); if (!gameOver || player.isAlive) { lastTime = performance.now(); requestAnimationFrame(gameLoop); } }
         function setGameOver(reason) { player.isAlive = false; gameOver = true; gameOverReason = reason; wisdomFetched = false; let mtc = 'hardship'; if (reason.toLowerCase().includes('evicted') || reason.toLowerCase().includes('jop granted')) mtc = 'evicted'; addGameMessage(reason, player.x, player.y - 30, mtc); }
+
+        function updateHealthDisplay() {
+            if (healthDisplay) healthDisplay.textContent = `Health: ${player.health}`;
+        }
+
+        function updatePlayerSize() {
+            const prevHeight = player.height;
+            player.scale = 1 + 0.1 * (player.health - 1);
+            player.width = player.baseWidth * player.scale;
+            player.height = player.baseHeight * player.scale;
+            player.y -= player.height - prevHeight;
+        }
+
+        function gainHealth() {
+            if (player.health < player.maxHealth) {
+                player.health++;
+                updatePlayerSize();
+                updateHealthDisplay();
+            }
+        }
+
+        function loseHealth(reason) {
+            if (player.health > 1) {
+                player.health--;
+                updatePlayerSize();
+                updateHealthDisplay();
+                addGameMessage("OUCH!", player.x, player.y - 20, 'hardship');
+            } else {
+                setGameOver(reason);
+            }
+        }
         function updatePlayer() { if (!player.isAlive) return; if (keys.left) player.dx = -player.speed; else if (keys.right) player.dx = player.speed; else player.dx = 0; player.x += player.dx; if (player.x < 0) player.x = 0; if (player.x + player.width > WORLD_WIDTH) player.x = WORLD_WIDTH - player.width; if (keys.up && player.isOnGround && !player.isJumping) { player.dy = -player.jumpPower; player.isJumping = true; player.isOnGround = false; } player.dy += GRAVITY; player.y += player.dy; player.isOnGround = false; platforms.forEach(platform => { if (player.x < platform.x + platform.width && player.x + player.width > platform.x && player.y < platform.y + platform.height && player.y + player.height > platform.y) { const prevPlayerBottom = player.y + player.height - player.dy; if (player.dy > 0 && prevPlayerBottom <= platform.y) { player.y = platform.y - player.height; player.dy = 0; player.isJumping = false; player.isOnGround = true; } else if (player.dy < 0 && (player.y - player.dy) >= (platform.y + platform.height)) { player.y = platform.y + platform.height; player.dy = 0; } else if (player.dx > 0 && (player.x + player.width - player.dx) <= platform.x) { player.x = platform.x - player.width; } else if (player.dx < 0 && (player.x - player.dx) >= (platform.x + platform.width)) { player.x = platform.x + platform.width; } } }); if (player.y + player.height > GAME_HEIGHT + 100) setGameOver("FELL INTO OBLIVION!"); }
         function updateEnemies() { enemies.forEach(enemy => { if (!enemy.isAlive) return; if (enemy.type === 'tenant') { enemy.x += enemy.dx * enemy.speed; if (enemy.x <= enemy.patrolStart || enemy.x + enemy.width >= enemy.patrolEnd) enemy.dx *= -1; let onPlatform = false; for (let platform of platforms) { if (enemy.x + enemy.width > platform.x && enemy.x < platform.x + platform.width && enemy.y + enemy.height >= platform.y && enemy.y + enemy.height <= platform.y + 10) { enemy.y = platform.y - enemy.height; onPlatform = true; break; } } } else if (enemy.type === 'judge') { enemy.gavelTimer++; if (enemy.gavelTimer >= enemy.gavelCycle) { enemy.gavelTimer = 0; enemy.gavelUp = !enemy.gavelUp; } } }); }
-        function checkCollisions() { if (!player.isAlive) return; enemies.forEach((enemy) => { if (!enemy.isAlive) return; if (player.x < enemy.x + enemy.width && player.x + player.width > enemy.x && player.y < enemy.y + enemy.height && player.y + player.height > enemy.y) { const prevPlayerBottom = player.y + player.height - player.dy; if (player.dy > 0 && prevPlayerBottom <= enemy.y + 5) { if (enemy.type === 'tenant') { enemy.isAlive = false; addGameMessage("EVICTED!", enemy.x, enemy.y - 20, 'evicted'); player.dy = -player.jumpPower / 1.5; } else if (enemy.type === 'judge') { if (!enemy.gavelUp) { enemy.isAlive = false; addGameMessage("JOP GRANTED!", enemy.x, enemy.y - 20, 'jop_granted'); player.dy = -player.jumpPower / 1.5; } else setGameOver("OTSC GRANTED!"); } } else { if (enemy.type === 'tenant') setGameOver("HARDSHIP STAY GRANTED!"); else if (enemy.type === 'judge') setGameOver("OTSC GRANTED!"); } } }); }
+        function checkCollisions() {
+            if (!player.isAlive) return;
+            enemies.forEach((enemy) => {
+                if (!enemy.isAlive) return;
+                if (player.x < enemy.x + enemy.width &&
+                    player.x + player.width > enemy.x &&
+                    player.y < enemy.y + enemy.height &&
+                    player.y + player.height > enemy.y) {
+                    const prevPlayerBottom = player.y + player.height - player.dy;
+                    if (player.dy > 0 && prevPlayerBottom <= enemy.y + 5) {
+                        if (enemy.type === 'tenant') {
+                            enemy.isAlive = false;
+                            addGameMessage("EVICTED!", enemy.x, enemy.y - 20, 'evicted');
+                            player.dy = -player.jumpPower / 1.5;
+                            gainHealth();
+                        } else if (enemy.type === 'judge') {
+                            if (!enemy.gavelUp) {
+                                enemy.isAlive = false;
+                                addGameMessage("JOP GRANTED!", enemy.x, enemy.y - 20, 'jop_granted');
+                                player.dy = -player.jumpPower / 1.5;
+                            } else {
+                                loseHealth("OTSC GRANTED!");
+                            }
+                        }
+                    } else {
+                        if (enemy.type === 'tenant') {
+                            loseHealth("HARDSHIP STAY GRANTED!");
+                            if (player.x + player.width / 2 < enemy.x + enemy.width / 2) {
+                                player.x = enemy.x - player.width;
+                            } else {
+                                player.x = enemy.x + enemy.width;
+                            }
+                        } else if (enemy.type === 'judge') {
+                            loseHealth("OTSC GRANTED!");
+                            if (player.x + player.width / 2 < enemy.x + enemy.width / 2) {
+                                player.x = enemy.x - player.width;
+                            } else {
+                                player.x = enemy.x + enemy.width;
+                            }
+                        }
+                    }
+                }
+            });
+        }
         function addGameMessage(text, x, y, typeClass) { const messageElement = document.createElement('div'); messageElement.textContent = text; messageElement.className = `game-message ${typeClass}`; messageElement.style.left = `${x - cameraX}px`; messageElement.style.top = `${y}px`; gameContainer.appendChild(messageElement); setTimeout(() => { if (gameContainer.contains(messageElement)) gameContainer.removeChild(messageElement); }, 2000); }
         function updateCamera() { cameraX = player.x - GAME_WIDTH / 2 + player.width / 2; if (cameraX < 0) cameraX = 0; if (cameraX > WORLD_WIDTH - GAME_WIDTH) cameraX = WORLD_WIDTH - GAME_WIDTH; }
 
