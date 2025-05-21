@@ -226,16 +226,10 @@
         }
 
         function adjustVehiclePlatform(p) {
-            const img = p.img || assets[p.imgKey];
-            const natWidth = (img && img.complete && img.naturalWidth) ? img.naturalWidth : 128;
-            const natHeight = (img && img.complete && img.naturalHeight) ? img.naturalHeight : 64;
-
-            p.displayWidth = natWidth;
-            p.displayHeight = natHeight;
-            // Match the hitbox to the displayed vehicle sprite
-            p.width = natWidth;
-            p.height = natHeight;
-
+            p.displayWidth = 128;
+            p.displayHeight = 64;
+            p.width = 128;
+            p.height = 20;
             p.anchorX = 0.5;
             p.anchorY = 0;
             p.y = GROUND_LEVEL - p.displayHeight;
