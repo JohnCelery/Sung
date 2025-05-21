@@ -228,17 +228,17 @@
         function adjustVehiclePlatform(p) {
             let scale = 1;
             if (p.imgKey === 'platformTexture1') {
-                scale = 2; // ambulance
+                scale = 1.8; // ambulance (slightly smaller)
             } else if (p.imgKey === 'platformTexture2') {
-                scale = 1.5; // police
+                scale = 1.3; // police (slightly smaller)
             }
             p.displayWidth = 128 * scale;
             p.displayHeight = 64 * scale;
-            p.width = 128 * scale;
-            p.height = 20;
+            p.width = p.displayWidth;
+            p.height = p.displayHeight; // hitbox matches sprite size
             p.anchorX = 0.5;
             p.anchorY = 0;
-            p.y = GROUND_LEVEL - p.displayHeight;
+            p.y = GROUND_LEVEL - p.displayHeight; // bottom aligned with ground
         }
 
         const buildingSpacing = 2;
