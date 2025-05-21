@@ -50,16 +50,16 @@
             width: 30, height: 40,
             baseWidth: 30, baseHeight: 40,
             scale: 1,
-            health: 1, maxHealth: 4,
+            health: 1, maxHealth: 10,
             dx: 0, dy: 0, speed: 4, jumpPower: 12,
             isJumping: false, isOnGround: true,
             img: null, isAlive: true
         };
 
-        // Increase enemy sprite sizes by 50%
-        const TENANT_WIDTH = 45, TENANT_HEIGHT = 45;
-        const JUDGE_WIDTH = 60, JUDGE_HEIGHT = 75;
-        const GAVEL_WIDTH = 20, GAVEL_HEIGHT = 8;
+        // Tripled enemy and judge sprite sizes
+        const TENANT_WIDTH = 45 * 3, TENANT_HEIGHT = 45 * 3;
+        const JUDGE_WIDTH = 60 * 3, JUDGE_HEIGHT = 75 * 3;
+        const GAVEL_WIDTH = 20 * 3, GAVEL_HEIGHT = 8 * 3;
 
         let enemies = [];
         let platforms = [];
