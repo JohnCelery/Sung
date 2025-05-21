@@ -56,9 +56,10 @@
             img: null, isAlive: true
         };
 
-        const TENANT_WIDTH = 30, TENANT_HEIGHT = 30; 
-        const JUDGE_WIDTH = 40, JUDGE_HEIGHT = 50;   
-        const GAVEL_WIDTH = 20, GAVEL_HEIGHT = 8; 
+        // Increase enemy sprite sizes by 50%
+        const TENANT_WIDTH = 45, TENANT_HEIGHT = 45;
+        const JUDGE_WIDTH = 60, JUDGE_HEIGHT = 75;
+        const GAVEL_WIDTH = 20, GAVEL_HEIGHT = 8;
 
         let enemies = [];
         let platforms = [];
