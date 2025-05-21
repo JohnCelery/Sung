@@ -272,8 +272,8 @@
             const apartment4Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment2.png?v=1747834176029";
             const apartment5Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment1.png?v=1747834170065";
             const courthouseUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/courthouse.png?v=1747834164056";
-            const platformTexture1Url = "PASTE-URL-HERE"; // Metal balcony texture
-            const platformTexture2Url = "PASTE-URL-HERE"; // Scaffolding texture
+            const platformTexture1Url = "https://cdn.glitch.global/a5785753-17af-4b26-97de-a03aca9da4c7/ambulance.png?v=1747842095209"; // Metal balcony texture
+            const platformTexture2Url = "https://cdn.glitch.global/a5785753-17af-4b26-97de-a03aca9da4c7/police.png?v=1747842118310"; // Scaffolding texture
             // --- END OF URLS TO PASTE ---
 
             const sungPlaceholder = `https://placehold.co/${player.width}x${player.height}/FFD700/000000?text=Sung`;
