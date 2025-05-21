@@ -26,7 +26,8 @@
             courthouse: null,
             platformTexture1: null,
             platformTexture2: null,
-            skyline: null
+            skyline: null,
+            background: null
         };
         let assetsToLoad = 0;
         let assetsLoaded = 0;
@@ -159,6 +160,7 @@
             const tenantImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/tenant.png?v=1747832331684"; 
             const judgeGavelUpImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/judge_gavel_up.png?v=1747832367574";   
             const judgeGavelDownImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/judge_gavel_down.png?v=1747832359174";   
+            const backgroundUrl = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/ChatGPT%20Image%20May%2021%2C%202025%2C%2012_43_11%20PM.png?v=1747848177762";
             const skylineImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/skyline.png?v=1747834687120";
             const apartment1Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment5.png?v=1747834222439";
             const apartment2Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment4.png?v=1747834188867";
@@ -174,6 +176,7 @@
             const tenantPlaceholder = `https://placehold.co/${TENANT_WIDTH}x${TENANT_HEIGHT}/4169E1/FFFFFF?text=T`;
             const judgeGavelUpPlaceholder = `https://placehold.co/${JUDGE_WIDTH}x${JUDGE_HEIGHT}/8A2BE2/FFFFFF?text=J_Up`;   
             const judgeGavelDownPlaceholder = `https://placehold.co/${JUDGE_WIDTH}x${JUDGE_HEIGHT}/6A0DAD/FFFFFF?text=J_Down`;   
+            const backgroundPlaceholder = `https://placehold.co/${GAME_WIDTH}x${GAME_HEIGHT}/000000/FFFFFF?text=BG`;
             const skylinePlaceholder = `https://placehold.co/${GAME_WIDTH}x${GAME_HEIGHT-GROUND_LEVEL}/4A4E69/FFFFFF?text=Skyline`;
             const apartment1Placeholder = `https://placehold.co/150x250/8C7853/FFFFFF?text=Apt1`;
             const apartment2Placeholder = `https://placehold.co/180x220/757575/FFFFFF?text=Apt2`;
@@ -184,10 +187,11 @@
             const platformTexture1Placeholder = `https://placehold.co/120x40/696969/FFFFFF?text=P1`;
             const platformTexture2Placeholder = `https://placehold.co/120x40/909090/FFFFFF?text=P2`;
 
-            loadImage(sungImageUrl, 'playerImage', sungPlaceholder); 
-            loadImage(tenantImageUrl, 'tenantImage', tenantPlaceholder); 
-            loadImage(judgeGavelUpImageUrl, 'judgeGavelUpImage', judgeGavelUpPlaceholder);   
-            loadImage(judgeGavelDownImageUrl, 'judgeGavelDownImage', judgeGavelDownPlaceholder);   
+            loadImage(sungImageUrl, 'playerImage', sungPlaceholder);
+            loadImage(tenantImageUrl, 'tenantImage', tenantPlaceholder);
+            loadImage(judgeGavelUpImageUrl, 'judgeGavelUpImage', judgeGavelUpPlaceholder);
+            loadImage(judgeGavelDownImageUrl, 'judgeGavelDownImage', judgeGavelDownPlaceholder);
+            loadImage(backgroundUrl, 'background', backgroundPlaceholder);
             loadImage(skylineImageUrl, 'skyline', skylinePlaceholder);
             loadImage(apartment1Url, 'apartment1', apartment1Placeholder);
             loadImage(apartment2Url, 'apartment2', apartment2Placeholder);
@@ -549,10 +553,28 @@
         }
 
         function drawBackground() {
+            if (assets.background && assets.background.complete && assets.background.naturalHeight !== 0) {
+                const bgParallaxFactor = 0.05;
+                const bgImgWidth = assets.background.naturalWidth;
+                const bgImgHeight = GAME_HEIGHT;
+
+                let bgStartX = (-cameraX * bgParallaxFactor) % bgImgWidth;
+                if (bgStartX > 0) {
+                    bgStartX -= bgImgWidth;
+                }
+
+                for (let i = 0; (bgStartX + i * bgImgWidth) < GAME_WIDTH; i++) {
+                    ctx.drawImage(assets.background, bgStartX + i * bgImgWidth, 0, bgImgWidth, bgImgHeight);
+                }
+            } else {
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+            }
+
             if (assets.skyline && assets.skyline.complete && assets.skyline.naturalHeight !== 0) {
-                const skylineParallaxFactor = 0.1; 
+                const skylineParallaxFactor = 0.1;
                 const skylineImgWidth = assets.skyline.naturalWidth;
-                const skylineImgHeight = GAME_HEIGHT - GROUND_LEVEL + 50; 
+                const skylineImgHeight = GAME_HEIGHT - GROUND_LEVEL + 50;
 
                 let startX = (-cameraX * skylineParallaxFactor) % skylineImgWidth;
                 // Ensure startX is negative or zero to correctly tile from left
