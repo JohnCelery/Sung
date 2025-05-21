@@ -14,7 +14,7 @@
             border: 2px solid #fff;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
             position: relative;
-            background-color: #5c5c5c; /* Fallback if skyline doesn't cover everything */
+            background-color: #5c5c5c;
             overflow: hidden;
         }
         canvas {
