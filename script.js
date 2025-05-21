@@ -54,10 +54,61 @@
         let cameraX = 0;
         let gameOver = false;
         let gameOverReason = "";
-        let wisdomFetched = false;
         let gameWon = false;
         let evictionCount = 0;
         const EVICTION_TARGET = 25;
+
+        const tenantElimMessages = [
+            "EVICTED!",
+            "WARRANT POSTED!",
+            "UNLAWFUL DETAINER GRANTED!",
+            "DEFAULT JUDGMENT ENTERED!",
+            "KEYS SURRENDERED!",
+            "CASH FOR KEYS ACCEPTED!",
+            "MARSHAL NOTIFIED!",
+            "LEASE TERMINATED!",
+            "TENANCY NULLIFIED!",
+            "NO RIGHT TO CURE!"
+        ];
+
+        const judgeElimMessages = [
+            "OTSC DENIED!",
+            "MOTION TO RECONSIDER REJECTED!",
+            "STAY VACATED!",
+            "RENT CONTROL OVERRULED!",
+            "JOP GRANTED!",
+            "JUDICIAL NOTICE IGNORED!",
+            "TEMPORARY RESTRAINTS LIFTED!",
+            "CHAMBERS CLOSED!",
+            "SUA SPONTE SHUTDOWN!",
+            "INJUNCTION DISMISSED!"
+        ];
+
+        const judgeHitMessages = [
+            "STAY OF EVICTION GRANTED!",
+            "SHAM LEASE ACCEPTED!",
+            "RENT ROLLBACK ORDERED!",
+            "CASE REOPENED!",
+            "TENANT'S AFFIDAVIT CREDIBLE!",
+            "JURY TRIAL DEMANDED!",
+            "OTSC ISSUED!",
+            "TEMPORARY RELIEF GRANTED!",
+            "HEARING ADJOURNED!",
+            "EQUITABLE RELIEF ORDERED!"
+        ];
+
+        const tenantHitMessages = [
+            "LEGAL SERVICES RETAINED!",
+            "MOTION TO TRANSFER FILED!",
+            "COUNTERCLAIM SERVED!",
+            "FEE WAIVER GRANTED!",
+            "REPAIRS NOT MADE!",
+            "RENT STRIKE BEGINS!",
+            "TENANT ORGANIZED!",
+            "RETAINER SIGNED!",
+            "HOUSING ADVOCATE ENGAGED!",
+            "PRO SE AND READY!"
+        ];
 
         const keys = { left: false, right: false, up: false };
 
@@ -321,7 +372,7 @@
             if (!assets.platformTexture2) {
                 assets.platformTexture2 = createFallbackPlatformPattern2();
             }
-            gameOver = false; gameWon = false; gameOverReason = ""; wisdomFetched = false; cameraX = 0;
+            gameOver = false; gameWon = false; gameOverReason = ""; cameraX = 0;
             evictionCount = 0;
             updateEvictionDisplay();
             WORLD_WIDTH = 3000;
@@ -370,7 +421,7 @@
         }
 
         function restartGame() { initGame(); if (!gameOver || player.isAlive) { lastTime = performance.now(); requestAnimationFrame(gameLoop); } }
-        function setGameOver(reason) { player.isAlive = false; gameOver = true; gameOverReason = reason; wisdomFetched = false; let mtc = 'hardship'; if (reason.toLowerCase().includes('evicted') || reason.toLowerCase().includes('jop granted')) mtc = 'evicted'; addGameMessage(reason, player.x, player.y - 30, mtc); }
+        function setGameOver(reason) { player.isAlive = false; gameOver = true; gameOverReason = reason; let mtc = 'hardship'; if (reason.toLowerCase().includes('evicted') || reason.toLowerCase().includes('jop granted')) mtc = 'evicted'; addGameMessage(reason, player.x, player.y - 30, mtc); }
 
         function setGameWin() { player.isAlive = false; gameWon = true; }
 
@@ -398,12 +449,12 @@
             }
         }
 
-        function loseHealth(reason) {
+        function loseHealth(reason, typeClass) {
             if (player.health > 1) {
                 player.health--;
                 updatePlayerSize();
                 updateHealthDisplay();
-                addGameMessage("OUCH!", player.x, player.y - 20, 'hardship');
+                addGameMessage(reason, player.x, player.y - 20, typeClass);
             } else {
                 setGameOver(reason);
             }
@@ -422,7 +473,8 @@
                     if (player.dy > 0 && prevPlayerBottom <= enemy.y + 5) {
                         if (enemy.type === 'tenant') {
                             enemy.isAlive = false;
-                            addGameMessage("EVICTED!", enemy.x, enemy.y - 20, 'evicted');
+                            const msg = tenantElimMessages[Math.floor(Math.random() * tenantElimMessages.length)];
+                            addGameMessage(msg, enemy.x, enemy.y - 20, 'evicted');
                             player.dy = -player.jumpPower / 1.5;
                             gainHealth();
                             evictionCount++;
@@ -433,22 +485,26 @@
                         } else if (enemy.type === 'judge') {
                             if (!enemy.gavelUp) {
                                 enemy.isAlive = false;
-                                addGameMessage("JOP GRANTED!", enemy.x, enemy.y - 20, 'jop_granted');
+                                const msg = judgeElimMessages[Math.floor(Math.random() * judgeElimMessages.length)];
+                                addGameMessage(msg, enemy.x, enemy.y - 20, 'jop_granted');
                                 player.dy = -player.jumpPower / 1.5;
                             } else {
-                                loseHealth("OTSC GRANTED!");
+                                const msg = judgeHitMessages[Math.floor(Math.random() * judgeHitMessages.length)];
+                                loseHealth(msg, 'otsc_granted');
                             }
                         }
                     } else {
                         if (enemy.type === 'tenant') {
-                            loseHealth("HARDSHIP STAY GRANTED!");
+                            const msg = tenantHitMessages[Math.floor(Math.random() * tenantHitMessages.length)];
+                            loseHealth(msg, 'hardship');
                             if (player.x + player.width / 2 < enemy.x + enemy.width / 2) {
                                 player.x = enemy.x - player.width;
                             } else {
                                 player.x = enemy.x + enemy.width;
                             }
                         } else if (enemy.type === 'judge') {
-                            loseHealth("OTSC GRANTED!");
+                            const msg = judgeHitMessages[Math.floor(Math.random() * judgeHitMessages.length)];
+                            loseHealth(msg, 'otsc_granted');
                             if (player.x + player.width / 2 < enemy.x + enemy.width / 2) {
                                 player.x = enemy.x - player.width;
                             } else {
@@ -590,54 +646,6 @@
                 }
             });
         }
-
-        async function fetchLegalWisdom(reason) {
-            let promptText = "";
-            if (reason === "HARDSHIP STAY GRANTED!") promptText = "In a humorous, witty, and very short (around 15-20 words) legal-themed quip, what might an eviction lawyer like Sung think or say after losing an eviction case because a 'hardship stay was granted' for the tenant in a video game setting? Make it sound like a resigned but funny observation from an experienced lawyer.";
-            else if (reason === "OTSC GRANTED!") promptText = "In a humorous, witty, and very short (around 15-20 words) legal-themed quip, what might an eviction lawyer like Sung think or say after effectively losing in court because an 'Order to Show Cause was granted' against his client's interests in a video game setting? Make it sound like a wry comment on procedural justice.";
-            else if (reason === "FELL INTO OBLIVION!") promptText = "In a humorous, witty, and very short (around 15-20 words) legal-themed quip, what might an eviction lawyer like Sung think after metaphorically 'falling into oblivion' in a video game, perhaps due to a critical misstep in a case or a procedural pitfall? Keep it lighthearted and related to lawyering.";
-            else return "Well, that was unexpected. Back to the drawing board!";
-
-            const wisdomElement = document.getElementById('legalWisdomText');
-            if (wisdomElement) wisdomElement.textContent = "Consulting Legal Precedents...";
-
-            try {
-                const apiKey = "YOUR_GEMINI_API_KEY_GOES_HERE"; 
-                if (!apiKey || apiKey === "YOUR_GEMINI_API_KEY_GOES_HERE" || apiKey === "") {
-                    console.warn("Gemini API Key is missing. Legal wisdom feature will not work.");
-                    if (wisdomElement) wisdomElement.textContent = "API Key missing. No wisdom today!";
-                    return;
-                }
-
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`; 
-                const payload = { contents: [{ role: "user", parts: [{ text: promptText }] }] };
-                
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorBody = await response.text();
-                    console.error('Gemini API response not OK:', response.status, errorBody);
-                    throw new Error(`API request failed with status ${response.status}`);
-                }
-                
-                const result = await response.json();
-
-                if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
-                    if (wisdomElement) wisdomElement.textContent = result.candidates[0].content.parts[0].text.trim();
-                } else {
-                    console.error('Unexpected Gemini API response structure:', result);
-                    if (wisdomElement) wisdomElement.textContent = "The legal archives are currently puzzling. Try again later.";
-                }
-        } catch (error) {
-            console.error('Error fetching legal wisdom:', error);
-            if (wisdomElement) wisdomElement.textContent = "Couldn't reach legal counsel. Check console.";
-        }
-    }
-
         function drawWinMessage() {
             if (gameWon) {
                 let msgContainer = gameContainer.querySelector('.game_win_message_container');
@@ -667,7 +675,6 @@
                         <div class="title">GAME OVER!</div>
                         <div class="game-over-reason" style="font-size: 0.7em; color: #FF6347; margin-bottom: 10px;">${gameOverReason}</div>
                         <div class="restart-text">Press 'R' to Restart</div>
-                        <div class="legal-wisdom"><strong>Legal Wisdom ✨:</strong> <span id="legalWisdomText">Loading...</span></div>
                     `;
                     gameContainer.appendChild(msgContainer);
                 } else { 
@@ -675,10 +682,6 @@
                     if (reasonDiv) reasonDiv.textContent = gameOverReason;
                 }
 
-                if (!wisdomFetched) {
-                    fetchLegalWisdom(gameOverReason);
-                    wisdomFetched = true;
-                }
             } else {
                  const existingMsg = gameContainer.querySelector('.game_over_message_container');
                  if (existingMsg) existingMsg.remove(); 
