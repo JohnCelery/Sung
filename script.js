@@ -22,7 +22,19 @@
         const GROUND_LEVEL = GAME_HEIGHT - 50;
 
         let assets = {
-            playerImage: null, tenantImage: null,
+            playerImage: null,
+            tenant1: null,
+            tenant2: null,
+            tenant3: null,
+            tenant4: null,
+            tenant5: null,
+            tenant6: null,
+            tenant7: null,
+            tenant8: null,
+            tenant9: null,
+            tenant10: null,
+            tenant11: null,
+            tenantImages: [],
             judgeGavelUpImage: null, judgeGavelDownImage: null,
             apartment1: null, apartment2: null, apartment3: null, apartment4: null, apartment5: null,
             courthouse: null,
@@ -210,7 +222,19 @@
             // --- PASTE YOUR FULL IMAGE URLs HERE ---
             const sungImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/sung.png?v=1747832341324";
             const mattImageUrl = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/matt2.png?v=1747857386593";
-            const tenantImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/tenant.png?v=1747832331684"; 
+            const tenantUrls = [
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant1.png?v=1747832331684",
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant2.png?v=1747857286015",
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant3.png?v=1747857319633",
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant4.png?v=1747857755445",
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant5?v=1747857939336",
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant6.png?v=1747859293342",
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant7.png?v=1747859342319",
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant8.png?v=1747859377626",
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant9.png?v=1747859397075",
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant10.png?v=1747859414929",
+                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant11.png?v=1747859433473"
+            ];
             const judgeGavelUpImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/judge_gavel_up.png?v=1747832367574";   
             const judgeGavelDownImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/judge_gavel_down.png?v=1747832359174";   
             const backgroundUrl = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/background2.png?v=1747848722965";
@@ -242,7 +266,9 @@
             const playerUrl = selectedCharacter === 'matt' ? mattImageUrl : sungImageUrl;
             const playerPlaceholder = selectedCharacter === 'matt' ? mattPlaceholder : sungPlaceholder;
             loadImage(playerUrl, 'playerImage', playerPlaceholder);
-            loadImage(tenantImageUrl, 'tenantImage', tenantPlaceholder);
+            tenantUrls.forEach((url, idx) => {
+                loadImage(url, `tenant${idx + 1}`, tenantPlaceholder);
+            });
             loadImage(judgeGavelUpImageUrl, 'judgeGavelUpImage', judgeGavelUpPlaceholder);
             loadImage(judgeGavelDownImageUrl, 'judgeGavelDownImage', judgeGavelDownPlaceholder);
             loadImage(backgroundUrl, 'background', backgroundPlaceholder);
@@ -266,6 +292,16 @@
                 colorBody: '#3498db', colorPants: '#2980b9', colorFace: '#F5DEB3',
                 lastDamageTime: -Infinity
             };
+        }
+
+        function getRandomTenantImage() {
+            if (assets.tenantImages && assets.tenantImages.length) {
+                const valid = assets.tenantImages.filter(img => img);
+                if (valid.length) {
+                    return valid[Math.floor(Math.random() * valid.length)];
+                }
+            }
+            return null;
         }
 
         function createJudge(x, y) {
@@ -358,7 +394,7 @@
                 createJudge(startX + 1800, GROUND_LEVEL)
             ];
             segEnemies.forEach(enemy => {
-                if (enemy.type === 'tenant') enemy.img = assets.tenantImage;
+                if (enemy.type === 'tenant') enemy.img = getRandomTenantImage();
                 else if (enemy.type === 'judge') {
                     enemy.imgUp = assets.judgeGavelUpImage;
                     enemy.imgDown = assets.judgeGavelDownImage;
@@ -375,6 +411,12 @@
 
         function initGame() {
             player.img = assets.playerImage;
+            assets.tenantImages = [
+                assets.tenant1, assets.tenant2, assets.tenant3,
+                assets.tenant4, assets.tenant5, assets.tenant6,
+                assets.tenant7, assets.tenant8, assets.tenant9,
+                assets.tenant10, assets.tenant11
+            ];
             player.baseWidth = 30;
             player.baseHeight = 40;
             player.scale = 1;
@@ -428,7 +470,7 @@
                 createJudge(1800, GROUND_LEVEL),
             ];
             enemies.forEach(enemy => {
-                if (enemy.type === 'tenant') enemy.img = assets.tenantImage;
+                if (enemy.type === 'tenant') enemy.img = getRandomTenantImage();
                 else if (enemy.type === 'judge') {
                     enemy.imgUp = assets.judgeGavelUpImage;
                     enemy.imgDown = assets.judgeGavelDownImage;
