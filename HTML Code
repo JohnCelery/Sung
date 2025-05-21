@@ -303,8 +303,8 @@
             const apartment4Placeholder = `https://placehold.co/170x240/8C7853/FFFFFF?text=Apt4`;
             const apartment5Placeholder = `https://placehold.co/140x260/757575/FFFFFF?text=Apt5`;
             const courthousePlaceholder = `https://placehold.co/250x300/C0C0C0/000000?text=Courthouse`;
-            const platformTexture1Placeholder = `https://placehold.co/50x20/696969/FFFFFF?text=P1`;
-            const platformTexture2Placeholder = `https://placehold.co/50x20/909090/FFFFFF?text=P2`;
+            const platformTexture1Placeholder = `https://placehold.co/120x40/696969/FFFFFF?text=P1`;
+            const platformTexture2Placeholder = `https://placehold.co/120x40/909090/FFFFFF?text=P2`;
 
             loadImage(sungImageUrl, 'playerImage', sungPlaceholder); 
             loadImage(tenantImageUrl, 'tenantImage', tenantPlaceholder); 
@@ -379,11 +379,11 @@
             platforms[0].img = null; 
             platforms[0].color = '#6B6B6B'; 
 
-            platforms.push(createPlatform(300, GROUND_LEVEL - 80, 150, 20, 'platformTexture1'));
-            platforms.push(createPlatform(600, GROUND_LEVEL - 120, 100, 20, 'platformTexture2'));
-            platforms.push(createPlatform(900, GROUND_LEVEL - 60, 200, 20, 'platformTexture1'));
-            platforms.push(createPlatform(1300, GROUND_LEVEL - 100, 150, 20, 'platformTexture2'));
-            platforms.push(createPlatform(1600, GROUND_LEVEL - 130, 120, 20, 'platformTexture1'));
+            platforms.push(createPlatform(300, GROUND_LEVEL - 80, 150, 40, 'platformTexture1'));
+            platforms.push(createPlatform(600, GROUND_LEVEL - 120, 140, 40, 'platformTexture2'));
+            platforms.push(createPlatform(900, GROUND_LEVEL - 60, 180, 40, 'platformTexture1'));
+            platforms.push(createPlatform(1300, GROUND_LEVEL - 100, 160, 40, 'platformTexture2'));
+            platforms.push(createPlatform(1600, GROUND_LEVEL - 130, 150, 40, 'platformTexture1'));
 
             enemies = [
                 createTenant(200, GROUND_LEVEL, 100), createTenant(500, GROUND_LEVEL, 150),
@@ -565,33 +565,41 @@
         function drawPlatforms() {
             platforms.forEach(platform => {
                 const platformScreenX = platform.x - cameraX;
-                if (platformScreenX + platform.width > 0 && platformScreenX < GAME_WIDTH) { // Only draw if visible
-                    let platformPattern = null;
+                if (platformScreenX + platform.width > 0 && platformScreenX < GAME_WIDTH) {
+                    const useSprite = platform.imgKey === 'platformTexture1' || platform.imgKey === 'platformTexture2';
+                    let drewImage = false;
                     if (platform.img && platform.img.complete && platform.img.naturalHeight !== 0) {
-                        try {
-                            platformPattern = ctx.createPattern(platform.img, 'repeat');
-                        } catch (e) {
-                            console.error("Error creating pattern for platform:", platform.imgKey, e);
-                            platformPattern = null; // Ensure it's null if error occurs
+                        if (useSprite) {
+                            ctx.drawImage(platform.img, platformScreenX, platform.y, platform.width, platform.height);
+                            drewImage = true;
+                        } else {
+                            try {
+                                const pattern = ctx.createPattern(platform.img, 'repeat');
+                                if (pattern) {
+                                    ctx.fillStyle = pattern;
+                                    ctx.save();
+                                    ctx.translate(platformScreenX, platform.y);
+                                    ctx.fillRect(0, 0, platform.width, platform.height);
+                                    ctx.restore();
+                                    drewImage = true;
+                                }
+                            } catch (e) {
+                                console.error("Error creating pattern for platform:", platform.imgKey, e);
+                            }
                         }
                     }
 
-                    if (platformPattern) {
-                        ctx.fillStyle = platformPattern;
-                        ctx.save();
-                        ctx.translate(platformScreenX, platform.y);
-                        ctx.fillRect(0, 0, platform.width, platform.height);
-                        ctx.restore();
-                    } else if (platform.color) { // For the main ground
-                        ctx.fillStyle = platform.color;
-                        ctx.fillRect(platformScreenX, platform.y, platform.width, platform.height);
-                    } else { // Fallback for raised platforms if image/pattern fails
-                        ctx.fillStyle = '#696969'; // Dim Gray - more visible fallback for raised platforms
-                        ctx.fillRect(platformScreenX, platform.y, platform.width, platform.height);
-                        // console.log("Drawing platform fallback color for platform at X:", platform.x);
+                    if (!drewImage) {
+                        if (platform.color) {
+                            ctx.fillStyle = platform.color;
+                            ctx.fillRect(platformScreenX, platform.y, platform.width, platform.height);
+                        } else {
+                            ctx.fillStyle = '#696969';
+                            ctx.fillRect(platformScreenX, platform.y, platform.width, platform.height);
+                        }
                     }
-                    
-                    ctx.strokeStyle = '#333'; 
+
+                    ctx.strokeStyle = '#333';
                     ctx.lineWidth = 1;
                     ctx.strokeRect(platformScreenX, platform.y, platform.width, platform.height);
                 }
