@@ -84,8 +84,6 @@
         }
         .game_over_message_container .title { font-size: 1em; margin-bottom: 10px; }
         .game_over_message_container .restart-text { font-size: 0.6em; margin-top: 10px; margin-bottom: 15px; }
-        .game_over_message_container .legal-wisdom { font-size: 0.5em; color: #f0f0f0; margin-top: 10px; border-top: 1px solid #ffeb3b; padding-top: 10px; min-height: 30px; }
-        .game_over_message_container .legal-wisdom strong { color: #ffcc00; }
 
         #loadingMessage {
             position: absolute;
