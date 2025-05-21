@@ -232,16 +232,12 @@
         }
 
         function adjustVehiclePlatform(p) {
-            // Scale the vehicles so their tops align with the player's head
-            // This keeps ambulances and police cars near the ground instead of towering over Sung
-            const scale = 0.625; // ~40px tall just like the player
-            p.displayWidth = 128 * scale;
-            p.displayHeight = 64 * scale;
-            p.width = p.displayWidth;
-            p.height = p.displayHeight; // hitbox matches sprite size
-            p.anchorX = 0.5;
+            // Draw ambulance and police sprites at the same size as their hitboxes
+            p.displayWidth = p.width;
+            p.displayHeight = p.height;
+            p.anchorX = 0; // align top-left for accurate collisions
             p.anchorY = 0;
-            p.y = GROUND_LEVEL - p.displayHeight; // bottom aligned with ground
+            p.y = GROUND_LEVEL - p.height; // bottom flush with ground
         }
 
         const buildingSpacing = 2;
@@ -268,11 +264,11 @@
 
         function generateSegment(startX) {
             const segPlatforms = [
-                createPlatform(startX + 300, GROUND_LEVEL - 80, 128, 20, 'platformTexture1'),
-                createPlatform(startX + 600, GROUND_LEVEL - 120, 128, 20, 'platformTexture2'),
-                createPlatform(startX + 900, GROUND_LEVEL - 60, 128, 20, 'platformTexture1'),
-                createPlatform(startX + 1300, GROUND_LEVEL - 100, 128, 20, 'platformTexture2'),
-                createPlatform(startX + 1600, GROUND_LEVEL - 130, 128, 20, 'platformTexture1')
+                createPlatform(startX + 300, GROUND_LEVEL - 80, 80, 40, 'platformTexture1'),
+                createPlatform(startX + 600, GROUND_LEVEL - 120, 80, 40, 'platformTexture2'),
+                createPlatform(startX + 900, GROUND_LEVEL - 60, 80, 40, 'platformTexture1'),
+                createPlatform(startX + 1300, GROUND_LEVEL - 100, 80, 40, 'platformTexture2'),
+                createPlatform(startX + 1600, GROUND_LEVEL - 130, 80, 40, 'platformTexture1')
             ];
             segPlatforms.forEach(p => {
                 if (p.imgKey === 'platformTexture1' || p.imgKey === 'platformTexture2') {
@@ -341,11 +337,11 @@
             platforms[0].color = '#6B6B6B';
             platforms[0].width = WORLD_WIDTH;
 
-            platforms.push(createPlatform(300, GROUND_LEVEL - 80, 128, 20, 'platformTexture1'));
-            platforms.push(createPlatform(600, GROUND_LEVEL - 120, 128, 20, 'platformTexture2'));
-            platforms.push(createPlatform(900, GROUND_LEVEL - 60, 128, 20, 'platformTexture1'));
-            platforms.push(createPlatform(1300, GROUND_LEVEL - 100, 128, 20, 'platformTexture2'));
-            platforms.push(createPlatform(1600, GROUND_LEVEL - 130, 128, 20, 'platformTexture1'));
+            platforms.push(createPlatform(300, GROUND_LEVEL - 80, 80, 40, 'platformTexture1'));
+            platforms.push(createPlatform(600, GROUND_LEVEL - 120, 80, 40, 'platformTexture2'));
+            platforms.push(createPlatform(900, GROUND_LEVEL - 60, 80, 40, 'platformTexture1'));
+            platforms.push(createPlatform(1300, GROUND_LEVEL - 100, 80, 40, 'platformTexture2'));
+            platforms.push(createPlatform(1600, GROUND_LEVEL - 130, 80, 40, 'platformTexture1'));
 
             // Adjust ambulance and police car sprites to be walkable
             platforms.forEach(p => {
