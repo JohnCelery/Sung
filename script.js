@@ -232,12 +232,9 @@
         }
 
         function adjustVehiclePlatform(p) {
-            let scale = 1;
-            if (p.imgKey === 'platformTexture1') {
-                scale = 1.8; // ambulance (slightly smaller)
-            } else if (p.imgKey === 'platformTexture2') {
-                scale = 1.3; // police (slightly smaller)
-            }
+            // Scale the vehicles so their tops align with the player's head
+            // This keeps ambulances and police cars near the ground instead of towering over Sung
+            const scale = 0.625; // ~40px tall just like the player
             p.displayWidth = 128 * scale;
             p.displayHeight = 64 * scale;
             p.width = p.displayWidth;
