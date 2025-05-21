@@ -7,8 +7,8 @@
         const characterSelect = document.getElementById('characterSelect');
         let selectedCharacter = 'sung';
 
-        const GAME_WIDTH = 800;
-        const GAME_HEIGHT = 400;
+        const GAME_WIDTH = 1600;
+        const GAME_HEIGHT = 800;
         canvas.width = GAME_WIDTH;
         canvas.height = GAME_HEIGHT;
         gameContainer.style.width = `${GAME_WIDTH}px`;
@@ -19,7 +19,7 @@
         let nextSegmentStart = WORLD_WIDTH;
         let bgNextX = 0;
         const GRAVITY = 0.5;
-        const GROUND_LEVEL = 336;
+        const GROUND_LEVEL = GAME_HEIGHT - 50;
 
         const TILE = 32;
         const SPRITE_SCALE = 1;
@@ -80,8 +80,8 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             obj.baseWidth = targetHeight * ratio;
             obj.width = obj.baseWidth * (obj.scale || 1);
             obj.height = obj.baseHeight * (obj.scale || 1);
-            obj.anchorX = 0.5;
-            obj.anchorY = 1;
+            obj.anchorX = 0;
+            obj.anchorY = 0;
         }
 
         let enemies = [];
