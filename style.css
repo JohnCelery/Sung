@@ -1,0 +1,105 @@
+        body {
+            margin: 0;
+            background-color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+        #gameContainer {
+            border: 2px solid #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            position: relative;
+            background-color: #5c5c5c; /* Fallback if skyline doesn't cover everything */
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+        #instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(0,0,0,0.7);
+            border-radius: 8px;
+            text-align: left;
+            max-width: 600px;
+        }
+        #instructions h2 { margin-top: 0; color: #ffcc00; }
+        #instructions p { margin-bottom: 5px; }
+        .game-message {
+            position: absolute;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-align: center;
+            animation: fadeOutMessage 2s forwards;
+            z-index: 100;
+        }
+        .evicted { background-color: #4CAF50; color: white; }
+        .hardship { background-color: #f44336; color: white; }
+        .jop_granted { background-color: #2196F3; color: white; }
+        .otsc_granted { background-color: #FF9800; color: white; }
+        
+        .game_over_message_container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: #ffeb3b;
+            background-color: rgba(0,0,0,0.85);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 200;
+            min-width: 300px;
+        }
+        .game_over_message_container .title { font-size: 1em; margin-bottom: 10px; }
+        .game_over_message_container .restart-text { font-size: 0.6em; margin-top: 10px; margin-bottom: 15px; }
+        .game_over_message_container .legal-wisdom { font-size: 0.5em; color: #f0f0f0; margin-top: 10px; border-top: 1px solid #ffeb3b; padding-top: 10px; min-height: 30px; }
+        .game_over_message_container .legal-wisdom strong { color: #ffcc00; }
+
+        #loadingMessage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #fff;
+            background-color: rgba(0,0,0,0.7);
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 300;
+        }
+
+        #healthDisplay {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 16px;
+            background-color: rgba(0,0,0,0.6);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 250;
+        }
+        #evictionTally {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            background-color: rgba(0,0,0,0.6);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 250;
+        }
+        @keyframes fadeOutMessage {
+            0% { opacity: 1; transform: translateY(0); }
+            70% { opacity: 1; transform: translateY(-20px); }
+            100% { opacity: 0; transform: translateY(-40px); }
+        }
