@@ -57,9 +57,9 @@
         };
 
         // Tripled enemy and judge sprite sizes
-        const TENANT_WIDTH = 45 * 3, TENANT_HEIGHT = 45 * 3;
-        const JUDGE_WIDTH = 60 * 3, JUDGE_HEIGHT = 75 * 3;
-        const GAVEL_WIDTH = 20 * 3, GAVEL_HEIGHT = 8 * 3;
+        const TENANT_WIDTH = 45 * 2, TENANT_HEIGHT = 45 * 2;
+        const JUDGE_WIDTH = 60 * 2, JUDGE_HEIGHT = 75 * 2;
+        const GAVEL_WIDTH = 20 * 2, GAVEL_HEIGHT = 8 * 2;
 
         let enemies = [];
         let platforms = [];
