@@ -164,6 +164,25 @@
             if (e.key === 'ArrowUp') keys.up = false;
         });
 
+        function createFallbackFireEscapePattern() {
+            const pCanvas = document.createElement('canvas');
+            pCanvas.width = 40;
+            pCanvas.height = 20;
+            const pCtx = pCanvas.getContext('2d');
+            pCtx.fillStyle = '#b0b0b0';
+            pCtx.fillRect(0, 0, pCanvas.width, pCanvas.height);
+            pCtx.strokeStyle = '#333';
+            pCtx.lineWidth = 2;
+            pCtx.beginPath();
+            pCtx.moveTo(0, 4); pCtx.lineTo(pCanvas.width, 4);
+            pCtx.moveTo(0, 10); pCtx.lineTo(pCanvas.width, 10);
+            pCtx.moveTo(0, 16); pCtx.lineTo(pCanvas.width, 16);
+            pCtx.moveTo(4, 0); pCtx.lineTo(4, pCanvas.height);
+            pCtx.moveTo(pCanvas.width - 4, 0); pCtx.lineTo(pCanvas.width - 4, pCanvas.height);
+            pCtx.stroke();
+            return pCanvas;
+        }
+
         function loadImage(src, assetName, placeholderUrl) {
             assetsToLoad++;
             const attemptLoad = (currentSrc, isOriginal) => {
@@ -275,11 +294,14 @@
         }
 
         function initGame() {
-            player.img = assets.playerImage; 
+            player.img = assets.playerImage;
             player.x = 50; player.y = GROUND_LEVEL - player.height;
             player.dx = 0; player.dy = 0;
             player.isJumping = false; player.isOnGround = true;
             player.isAlive = true;
+            if (!assets.fireEscapeTexture) {
+                assets.fireEscapeTexture = createFallbackFireEscapePattern();
+            }
             gameOver = false; gameOverReason = ""; wisdomFetched = false; cameraX = 0;
             
             const existingMessages = gameContainer.querySelectorAll('.game-message, .game_over_message_container');
