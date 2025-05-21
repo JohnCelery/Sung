@@ -789,10 +789,13 @@
             requestAnimationFrame(gameLoop);
         }
 
-        document.querySelectorAll('.character-option').forEach(btn => {
-            btn.addEventListener('click', () => {
-                selectedCharacter = btn.dataset.char;
-                if (characterSelect) characterSelect.style.display = 'none';
-                loadAllAssets();
+        window.addEventListener('DOMContentLoaded', function() {
+            var charButtons = document.querySelectorAll('.character-option');
+            Array.prototype.forEach.call(charButtons, function(btn) {
+                btn.addEventListener('click', function() {
+                    selectedCharacter = this.dataset.char;
+                    if (characterSelect) characterSelect.style.display = 'none';
+                    loadAllAssets();
+                });
             });
         });
