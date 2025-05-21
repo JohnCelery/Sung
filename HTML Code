@@ -117,12 +117,13 @@
         const GRAVITY = 0.5;
         const GROUND_LEVEL = GAME_HEIGHT - 50;
 
-        let assets = { 
-            playerImage: null, tenantImage: null, 
-            judgeGavelUpImage: null, judgeGavelDownImage: null, 
+        let assets = {
+            playerImage: null, tenantImage: null,
+            judgeGavelUpImage: null, judgeGavelDownImage: null,
             apartment1: null, apartment2: null, apartment3: null, apartment4: null, apartment5: null,
             courthouse: null,
-            fireEscapeTexture: null, 
+            platformTexture1: null,
+            platformTexture2: null,
             skyline: null
         };
         let assetsToLoad = 0;
@@ -164,7 +165,7 @@
             if (e.key === 'ArrowUp') keys.up = false;
         });
 
-        function createFallbackFireEscapePattern() {
+        function createFallbackPlatformPattern1() {
             const pCanvas = document.createElement('canvas');
             pCanvas.width = 40;
             pCanvas.height = 20;
@@ -179,6 +180,24 @@
             pCtx.moveTo(0, 16); pCtx.lineTo(pCanvas.width, 16);
             pCtx.moveTo(4, 0); pCtx.lineTo(4, pCanvas.height);
             pCtx.moveTo(pCanvas.width - 4, 0); pCtx.lineTo(pCanvas.width - 4, pCanvas.height);
+            pCtx.stroke();
+            return pCanvas;
+        }
+
+        function createFallbackPlatformPattern2() {
+            const pCanvas = document.createElement('canvas');
+            pCanvas.width = 40;
+            pCanvas.height = 20;
+            const pCtx = pCanvas.getContext('2d');
+            pCtx.fillStyle = '#909090';
+            pCtx.fillRect(0, 0, pCanvas.width, pCanvas.height);
+            pCtx.strokeStyle = '#222';
+            pCtx.lineWidth = 2;
+            pCtx.beginPath();
+            pCtx.moveTo(0, 6); pCtx.lineTo(pCanvas.width, 6);
+            pCtx.moveTo(0, 12); pCtx.lineTo(pCanvas.width, 12);
+            pCtx.moveTo(5, 0); pCtx.lineTo(5, pCanvas.height);
+            pCtx.moveTo(pCanvas.width - 5, 0); pCtx.lineTo(pCanvas.width - 5, pCanvas.height);
             pCtx.stroke();
             return pCanvas;
         }
@@ -237,7 +256,8 @@
             const apartment4Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment2.png?v=1747834176029";
             const apartment5Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment1.png?v=1747834170065";
             const courthouseUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/courthouse.png?v=1747834164056";
-            const fireEscapeTextureUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/fire_escape_texture.png?v=1747834261006";
+            const platformTexture1Url = "PASTE-URL-HERE"; // Metal balcony texture
+            const platformTexture2Url = "PASTE-URL-HERE"; // Scaffolding texture
             // --- END OF URLS TO PASTE ---
 
             const sungPlaceholder = `https://placehold.co/${player.width}x${player.height}/FFD700/000000?text=Sung`;
@@ -251,7 +271,8 @@
             const apartment4Placeholder = `https://placehold.co/170x240/8C7853/FFFFFF?text=Apt4`;
             const apartment5Placeholder = `https://placehold.co/140x260/757575/FFFFFF?text=Apt5`;
             const courthousePlaceholder = `https://placehold.co/250x300/C0C0C0/000000?text=Courthouse`;
-            const fireEscapeTexturePlaceholder = `https://placehold.co/50x20/696969/FFFFFF?text=FE_Fallback`; // Dim Gray fallback
+            const platformTexture1Placeholder = `https://placehold.co/50x20/696969/FFFFFF?text=P1`;
+            const platformTexture2Placeholder = `https://placehold.co/50x20/909090/FFFFFF?text=P2`;
 
             loadImage(sungImageUrl, 'playerImage', sungPlaceholder); 
             loadImage(tenantImageUrl, 'tenantImage', tenantPlaceholder); 
@@ -264,15 +285,16 @@
             loadImage(apartment4Url, 'apartment4', apartment4Placeholder);
             loadImage(apartment5Url, 'apartment5', apartment5Placeholder);
             loadImage(courthouseUrl, 'courthouse', courthousePlaceholder);
-            loadImage(fireEscapeTextureUrl, 'fireEscapeTexture', fireEscapeTexturePlaceholder);
+            loadImage(platformTexture1Url, 'platformTexture1', platformTexture1Placeholder);
+            loadImage(platformTexture2Url, 'platformTexture2', platformTexture2Placeholder);
         }
 
         function createTenant(x, y, patrolDistance) { return { type: 'tenant', x, y: y - TENANT_HEIGHT, width: TENANT_WIDTH, height: TENANT_HEIGHT, img: null, dx: 1, speed: 1, patrolStart: x, patrolEnd: x + patrolDistance, isAlive: true, colorBody: '#3498db', colorPants: '#2980b9', colorFace: '#F5DEB3' }; }
         function createJudge(x, y) { return { type: 'judge', x, y: y - JUDGE_HEIGHT, width: JUDGE_WIDTH, height: JUDGE_HEIGHT, imgUp: null, imgDown: null, gavelUp: false, gavelTimer: 0, gavelCycle: 120, isAlive: true, robeColor: '#6a0dad', faceColor: '#E0B0FF' }; } 
         
-        function createPlatform(x, y, width, height, imgKey = 'fireEscapeTexture') { 
-            return { x, y, width, height, img: assets[imgKey], imgKey: imgKey, color: null }; 
-        } 
+        function createPlatform(x, y, width, height, imgKey = 'platformTexture1') {
+            return { x, y, width, height, img: assets[imgKey], imgKey: imgKey, color: null };
+        }
         
         function createBackgroundElement(imgKey, x, y, parallaxFactor = 0.5, displayWidth = null, displayHeight = null) {
             const imageAsset = assets[imgKey];
@@ -299,8 +321,11 @@
             player.dx = 0; player.dy = 0;
             player.isJumping = false; player.isOnGround = true;
             player.isAlive = true;
-            if (!assets.fireEscapeTexture) {
-                assets.fireEscapeTexture = createFallbackFireEscapePattern();
+            if (!assets.platformTexture1) {
+                assets.platformTexture1 = createFallbackPlatformPattern1();
+            }
+            if (!assets.platformTexture2) {
+                assets.platformTexture2 = createFallbackPlatformPattern2();
             }
             gameOver = false; gameOverReason = ""; wisdomFetched = false; cameraX = 0;
             
@@ -313,11 +338,11 @@
             platforms[0].img = null; 
             platforms[0].color = '#6B6B6B'; 
 
-            platforms.push(createPlatform(300, GROUND_LEVEL - 80, 150, 20));
-            platforms.push(createPlatform(600, GROUND_LEVEL - 120, 100, 20));
-            platforms.push(createPlatform(900, GROUND_LEVEL - 60, 200, 20));
-            platforms.push(createPlatform(1300, GROUND_LEVEL - 100, 150, 20));
-            platforms.push(createPlatform(1600, GROUND_LEVEL - 130, 120, 20));
+            platforms.push(createPlatform(300, GROUND_LEVEL - 80, 150, 20, 'platformTexture1'));
+            platforms.push(createPlatform(600, GROUND_LEVEL - 120, 100, 20, 'platformTexture2'));
+            platforms.push(createPlatform(900, GROUND_LEVEL - 60, 200, 20, 'platformTexture1'));
+            platforms.push(createPlatform(1300, GROUND_LEVEL - 100, 150, 20, 'platformTexture2'));
+            platforms.push(createPlatform(1600, GROUND_LEVEL - 130, 120, 20, 'platformTexture1'));
 
             enemies = [
                 createTenant(200, GROUND_LEVEL, 100), createTenant(500, GROUND_LEVEL, 150),
@@ -434,10 +459,10 @@
                     } else if (platform.color) { // For the main ground
                         ctx.fillStyle = platform.color;
                         ctx.fillRect(platformScreenX, platform.y, platform.width, platform.height);
-                    } else { // Fallback for fire escapes if image/pattern fails
-                        ctx.fillStyle = '#696969'; // Dim Gray - more visible fallback for fire escapes
+                    } else { // Fallback for raised platforms if image/pattern fails
+                        ctx.fillStyle = '#696969'; // Dim Gray - more visible fallback for raised platforms
                         ctx.fillRect(platformScreenX, platform.y, platform.width, platform.height);
-                        // console.log("Drawing fire escape fallback color for platform at X:", platform.x);
+                        // console.log("Drawing platform fallback color for platform at X:", platform.x);
                     }
                     
                     ctx.strokeStyle = '#333'; 
