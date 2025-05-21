@@ -94,6 +94,17 @@
             border-radius: 5px;
             z-index: 250;
         }
+        #evictionTally {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            background-color: rgba(0,0,0,0.6);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 250;
+        }
         @keyframes fadeOutMessage {
             0% { opacity: 1; transform: translateY(0); }
             70% { opacity: 1; transform: translateY(-20px); }
@@ -106,6 +117,7 @@
         <canvas id="gameCanvas"></canvas>
         <div id="loadingMessage" style="display: none;">Loading Assets...</div>
         <div id="healthDisplay">Health: 1</div>
+        <div id="evictionTally">Evictions: 0</div>
     </div>
     <div id="instructions">
         <h2>How to Play Sung's Eviction Adventure:</h2>
@@ -118,6 +130,7 @@
         const gameContainer = document.getElementById('gameContainer');
         const loadingMessageElement = document.getElementById('loadingMessage');
         const healthDisplay = document.getElementById('healthDisplay');
+        const evictionDisplay = document.getElementById('evictionTally');
 
         const GAME_WIDTH = 800;
         const GAME_HEIGHT = 400;
@@ -162,8 +175,11 @@
         let backgroundElements = []; 
         let cameraX = 0;
         let gameOver = false;
-        let gameOverReason = ""; 
-        let wisdomFetched = false; 
+        let gameOverReason = "";
+        let wisdomFetched = false;
+        let gameWon = false;
+        let evictionCount = 0;
+        const EVICTION_TARGET = 25;
 
         const keys = { left: false, right: false, up: false };
 
@@ -171,7 +187,7 @@
             if (e.key === 'ArrowLeft') keys.left = true;
             if (e.key === 'ArrowRight') keys.right = true;
             if (e.key === 'ArrowUp') keys.up = true;
-            if (gameOver && e.key.toLowerCase() === 'r') {
+            if ((gameOver || gameWon) && e.key.toLowerCase() === 'r') {
                 restartGame();
             }
         });
@@ -350,9 +366,11 @@
             if (!assets.platformTexture2) {
                 assets.platformTexture2 = createFallbackPlatformPattern2();
             }
-            gameOver = false; gameOverReason = ""; wisdomFetched = false; cameraX = 0;
+            gameOver = false; gameWon = false; gameOverReason = ""; wisdomFetched = false; cameraX = 0;
+            evictionCount = 0;
+            updateEvictionDisplay();
             
-            const existingMessages = gameContainer.querySelectorAll('.game-message, .game_over_message_container');
+            const existingMessages = gameContainer.querySelectorAll('.game-message, .game_over_message_container, .game_win_message_container');
             existingMessages.forEach(msg => msg.remove());
 
             platforms = [ 
@@ -417,8 +435,14 @@
         function restartGame() { initGame(); if (!gameOver || player.isAlive) { lastTime = performance.now(); requestAnimationFrame(gameLoop); } }
         function setGameOver(reason) { player.isAlive = false; gameOver = true; gameOverReason = reason; wisdomFetched = false; let mtc = 'hardship'; if (reason.toLowerCase().includes('evicted') || reason.toLowerCase().includes('jop granted')) mtc = 'evicted'; addGameMessage(reason, player.x, player.y - 30, mtc); }
 
+        function setGameWin() { player.isAlive = false; gameWon = true; }
+
         function updateHealthDisplay() {
             if (healthDisplay) healthDisplay.textContent = `Health: ${player.health}`;
+        }
+
+        function updateEvictionDisplay() {
+            if (evictionDisplay) evictionDisplay.textContent = `Evictions: ${evictionCount}`;
         }
 
         function updatePlayerSize() {
@@ -464,6 +488,11 @@
                             addGameMessage("EVICTED!", enemy.x, enemy.y - 20, 'evicted');
                             player.dy = -player.jumpPower / 1.5;
                             gainHealth();
+                            evictionCount++;
+                            updateEvictionDisplay();
+                            if (evictionCount >= EVICTION_TARGET) {
+                                setGameWin();
+                            }
                         } else if (enemy.type === 'judge') {
                             if (!enemy.gavelUp) {
                                 enemy.isAlive = false;
@@ -648,9 +677,28 @@
                     console.error('Unexpected Gemini API response structure:', result);
                     if (wisdomElement) wisdomElement.textContent = "The legal archives are currently puzzling. Try again later.";
                 }
-            } catch (error) {
-                console.error('Error fetching legal wisdom:', error);
-                if (wisdomElement) wisdomElement.textContent = "Couldn't reach legal counsel. Check console.";
+        } catch (error) {
+            console.error('Error fetching legal wisdom:', error);
+            if (wisdomElement) wisdomElement.textContent = "Couldn't reach legal counsel. Check console.";
+        }
+    }
+
+        function drawWinMessage() {
+            if (gameWon) {
+                let msgContainer = gameContainer.querySelector('.game_win_message_container');
+                if (!msgContainer) {
+                    msgContainer = document.createElement('div');
+                    msgContainer.className = 'game_over_message_container game_win_message_container';
+                    msgContainer.innerHTML = `
+                        <div class="title">CONGRATULATIONS!</div>
+                        <div style="font-size: 0.7em; color: #4CAF50; margin-bottom: 10px;">All Tenants in Newark Have Been Evicted!</div>
+                        <div class="restart-text">Press 'R' to Restart</div>
+                    `;
+                    gameContainer.appendChild(msgContainer);
+                }
+            } else {
+                const existingMsg = gameContainer.querySelector('.game_win_message_container');
+                if (existingMsg) existingMsg.remove();
             }
         }
 
@@ -687,7 +735,8 @@
             if (!lastTime && timestamp) lastTime = timestamp;
             else if (!timestamp) { lastTime = performance.now(); requestAnimationFrame(gameLoop); return; }
             lastTime = timestamp;
-            if (gameOver && !player.isAlive) { drawGameOverMessage(); return; } 
+            if (gameWon) { drawWinMessage(); return; }
+            if (gameOver && !player.isAlive) { drawGameOverMessage(); return; }
             ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
             
             drawBackground(); 
@@ -701,7 +750,8 @@
             drawPlayer(); 
             drawEnemies();
             
-            drawGameOverMessage(); 
+            drawWinMessage();
+            drawGameOverMessage();
             requestAnimationFrame(gameLoop);
         }
 
