@@ -72,28 +72,28 @@
 
         const tenantElimMessages = [
             "EVICTED!",
-            "WARRANT POSTED!",
-            "UNLAWFUL DETAINER GRANTED!",
+            "WARRANT EXECUTED!",
+            "RENT INCREASE UPHELD!!",
             "DEFAULT JUDGMENT ENTERED!",
-            "KEYS SURRENDERED!",
-            "CASH FOR KEYS ACCEPTED!",
-            "MARSHAL NOTIFIED!",
+            "SECURITY DEPOSIT WITHHELD!",
+            "EMOTIONAL SUPPORT ANIMAL BANNED!",
+            "ADJOURNMENT REQUEST DENIED!",
             "LEASE TERMINATED!",
-            "TENANCY NULLIFIED!",
-            "NO RIGHT TO CURE!"
+            "UNAUTHORIZED OCCUPANTS REMOVED!",
+            "MARINI DENIED!"
         ];
 
         const judgeElimMessages = [
             "OTSC DENIED!",
             "MOTION TO RECONSIDER REJECTED!",
-            "STAY VACATED!",
+            "HARDSHIP STAY DENIED!",
             "RENT CONTROL OVERRULED!",
             "JOP GRANTED!",
-            "JUDICIAL NOTICE IGNORED!",
-            "TEMPORARY RESTRAINTS LIFTED!",
+            "RECUSED!",
+            "BENCHSLAPPED!",
             "CHAMBERS CLOSED!",
             "SUA SPONTE SHUTDOWN!",
-            "INJUNCTION DISMISSED!"
+            "HEARSAY OVERRULED!"
         ];
 
         const judgeHitMessages = [
@@ -102,11 +102,11 @@
             "RENT ROLLBACK ORDERED!",
             "CASE REOPENED!",
             "TENANT'S AFFIDAVIT CREDIBLE!",
-            "JURY TRIAL DEMANDED!",
+            "MOTION TO TRANSFER AND CONSOLIDATE GRANTED!",
             "OTSC ISSUED!",
-            "TEMPORARY RELIEF GRANTED!",
-            "HEARING ADJOURNED!",
-            "EQUITABLE RELIEF ORDERED!"
+            "THIRD OOR GRANTED!",
+            "STACK AMENDMENT APPLIED!",
+            "CARES ACT APPLICABLE!"
         ];
 
         const tenantHitMessages = [
@@ -116,10 +116,10 @@
             "FEE WAIVER GRANTED!",
             "REPAIRS NOT MADE!",
             "RENT STRIKE BEGINS!",
-            "TENANT ORGANIZED!",
-            "RETAINER SIGNED!",
+            "ABATEMENT ORDERED!",
+            "ADJOURNMENT REQUEST GRANTED!",
             "HOUSING ADVOCATE ENGAGED!",
-            "PRO SE AND READY!"
+            "MONEY PAID INTO COURT!"
         ];
 
         const keys = { left: false, right: false, up: false };
