@@ -241,6 +241,8 @@
                 tempImg.crossOrigin = "Anonymous"; 
                 tempImg.src = currentSrc; 
                 tempImg.onload = () => {
+                    tempImg.originalWidth = tempImg.naturalWidth;
+                    tempImg.originalHeight = tempImg.naturalHeight;
                     assets[assetName] = tempImg;
                     assetsLoaded++;
                     console.log(`Successfully loaded ${isOriginal ? 'asset' : 'placeholder'}: ${currentSrc} for ${assetName}`);
@@ -384,6 +386,17 @@
             platforms.push(createPlatform(900, GROUND_LEVEL - 60, 180, 40, 'platformTexture1'));
             platforms.push(createPlatform(1300, GROUND_LEVEL - 100, 160, 40, 'platformTexture2'));
             platforms.push(createPlatform(1600, GROUND_LEVEL - 130, 150, 40, 'platformTexture1'));
+
+            // Adjust ambulance and police car sprites to display at ground level
+            platforms.forEach(p => {
+                if (p.imgKey === 'platformTexture1' || p.imgKey === 'platformTexture2') {
+                    p.displayWidth = 128;
+                    p.displayHeight = 128;
+                    p.anchorX = 0.5;
+                    p.anchorY = 1.0;
+                    p.y = GROUND_LEVEL;
+                }
+            });
 
             enemies = [
                 createTenant(200, GROUND_LEVEL, 100), createTenant(500, GROUND_LEVEL, 150),
@@ -570,7 +583,13 @@
                     let drewImage = false;
                     if (platform.img && platform.img.complete && platform.img.naturalHeight !== 0) {
                         if (useSprite) {
-                            ctx.drawImage(platform.img, platformScreenX, platform.y, platform.width, platform.height);
+                            const dW = platform.displayWidth || platform.width;
+                            const dH = platform.displayHeight || platform.height;
+                            const anchorX = platform.anchorX || 0;
+                            const anchorY = platform.anchorY || 0;
+                            const drawX = platformScreenX - anchorX * dW;
+                            const drawY = platform.y - anchorY * dH;
+                            ctx.drawImage(platform.img, drawX, drawY, dW, dH);
                             drewImage = true;
                         } else {
                             try {
@@ -601,7 +620,11 @@
 
                     ctx.strokeStyle = '#333';
                     ctx.lineWidth = 1;
-                    ctx.strokeRect(platformScreenX, platform.y, platform.width, platform.height);
+                    const sDW = useSprite ? (platform.displayWidth || platform.width) : platform.width;
+                    const sDH = useSprite ? (platform.displayHeight || platform.height) : platform.height;
+                    const sX = useSprite ? platformScreenX - (platform.anchorX || 0) * sDW : platformScreenX;
+                    const sY = useSprite ? platform.y - (platform.anchorY || 0) * sDH : platform.y;
+                    ctx.strokeRect(sX, sY, sDW, sDH);
                 }
             });
         }
