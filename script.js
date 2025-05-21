@@ -114,8 +114,10 @@
             assetsToLoad++;
             const attemptLoad = (currentSrc, isOriginal) => {
                 const tempImg = new Image();
-                tempImg.crossOrigin = "Anonymous"; 
-                tempImg.src = currentSrc; 
+                // Avoid setting crossOrigin to prevent CORS issues with
+                // third-party hosts. The game does not need pixel access,
+                // so letting the browser handle CORS is fine.
+                tempImg.src = currentSrc;
                 tempImg.onload = () => {
                     tempImg.originalWidth = tempImg.naturalWidth;
                     tempImg.originalHeight = tempImg.naturalHeight;
