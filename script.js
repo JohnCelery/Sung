@@ -160,7 +160,7 @@
             const tenantImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/tenant.png?v=1747832331684"; 
             const judgeGavelUpImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/judge_gavel_up.png?v=1747832367574";   
             const judgeGavelDownImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/judge_gavel_down.png?v=1747832359174";   
-            const backgroundUrl = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/ChatGPT%20Image%20May%2021%2C%202025%2C%2012_43_11%20PM.png?v=1747848177762";
+            const backgroundUrl = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/background2.png?v=1747848722965";
             const skylineImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/skyline.png?v=1747834687120";
             const apartment1Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment5.png?v=1747834222439";
             const apartment2Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment4.png?v=1747834188867";
