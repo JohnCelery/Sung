@@ -114,10 +114,8 @@
             assetsToLoad++;
             const attemptLoad = (currentSrc, isOriginal) => {
                 const tempImg = new Image();
-                // Avoid setting crossOrigin to prevent CORS issues with
-                // third-party hosts. The game does not need pixel access,
-                // so letting the browser handle CORS is fine.
-                tempImg.src = currentSrc;
+                tempImg.crossOrigin = "Anonymous"; 
+                tempImg.src = currentSrc; 
                 tempImg.onload = () => {
                     tempImg.originalWidth = tempImg.naturalWidth;
                     tempImg.originalHeight = tempImg.naturalHeight;
@@ -228,24 +226,13 @@
         }
 
         function adjustVehiclePlatform(p) {
-            const img = assets[p.imgKey];
-            const natW = (img && img.complete && img.naturalWidth) ? img.naturalWidth : p.width;
-            const natH = (img && img.complete && img.naturalHeight) ? img.naturalHeight : p.height;
-
-            let scale = 1;
-            if (p.imgKey === 'platformTexture1') scale = 2; // Ambulance
-            else if (p.imgKey === 'platformTexture2') scale = 1.5; // Police car
-
-            const dispW = natW * scale;
-            const dispH = natH * scale;
-
-            p.displayWidth = dispW;
-            p.displayHeight = dispH;
-            p.width = dispW;   // collision area matches sprite size
-            p.height = dispH;
-            p.anchorX = 0;     // draw from top-left to align with collision box
+            p.displayWidth = 128;
+            p.displayHeight = 64;
+            p.width = 128;
+            p.height = 20;
+            p.anchorX = 0.5;
             p.anchorY = 0;
-            p.y = GROUND_LEVEL - dispH; // bottom flush with ground
+            p.y = GROUND_LEVEL - p.displayHeight;
         }
 
         const buildingSpacing = 2;
