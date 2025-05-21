@@ -7,8 +7,8 @@
         const characterSelect = document.getElementById('characterSelect');
         let selectedCharacter = 'sung';
 
-        const GAME_WIDTH = Math.floor(window.innerWidth * 0.9);
-        const GAME_HEIGHT = Math.floor(window.innerHeight * 0.75);
+        const GAME_WIDTH = 800;
+        const GAME_HEIGHT = 400;
         canvas.width = GAME_WIDTH;
         canvas.height = GAME_HEIGHT;
         gameContainer.style.width = `${GAME_WIDTH}px`;
@@ -19,7 +19,13 @@
         let nextSegmentStart = WORLD_WIDTH;
         let bgNextX = 0;
         const GRAVITY = 0.5;
-        const GROUND_LEVEL = GAME_HEIGHT - 50;
+        const GROUND_LEVEL = 336;
+
+        const TILE = 32;
+        const SPRITE_SCALE = 1;
+        const PLAYER_TARGET_HEIGHT = 2 * TILE * SPRITE_SCALE;
+        const TENANT_TARGET_HEIGHT = 2 * TILE * SPRITE_SCALE;
+        const JUDGE_TARGET_HEIGHT = 2.5 * TILE * SPRITE_SCALE;
 
         let assets = {
             playerImage: null,
@@ -56,10 +62,27 @@
             img: null, isAlive: true
         };
 
-        // Tripled enemy and judge sprite sizes
-        const TENANT_WIDTH = 45 * 2, TENANT_HEIGHT = 45 * 2;
-        const JUDGE_WIDTH = 60 * 2, JUDGE_HEIGHT = 75 * 2;
-        const GAVEL_WIDTH = 20 * 2, GAVEL_HEIGHT = 8 * 2;
+        const TENANT_WIDTH = TILE * SPRITE_SCALE;
+        const TENANT_HEIGHT = TENANT_TARGET_HEIGHT;
+        const JUDGE_WIDTH = TILE * SPRITE_SCALE; // width adjusted after loading
+        const JUDGE_HEIGHT = JUDGE_TARGET_HEIGHT;
+const GAVEL_WIDTH = 20 * SPRITE_SCALE;
+const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
+
+        function setScaledSpriteDimensions(obj, img, targetHeight) {
+            let ratio = 1;
+            if (img && img.originalHeight) {
+                ratio = img.originalWidth / img.originalHeight;
+            } else if (obj.baseHeight) {
+                ratio = obj.baseWidth / obj.baseHeight;
+            }
+            obj.baseHeight = targetHeight;
+            obj.baseWidth = targetHeight * ratio;
+            obj.width = obj.baseWidth * (obj.scale || 1);
+            obj.height = obj.baseHeight * (obj.scale || 1);
+            obj.anchorX = 0.5;
+            obj.anchorY = 1;
+        }
 
         let enemies = [];
         let platforms = [];
@@ -395,10 +418,13 @@
                 createJudge(startX + 1800, GROUND_LEVEL)
             ];
             segEnemies.forEach(enemy => {
-                if (enemy.type === 'tenant') enemy.img = getRandomTenantImage();
-                else if (enemy.type === 'judge') {
+                if (enemy.type === 'tenant') {
+                    enemy.img = getRandomTenantImage();
+                    setScaledSpriteDimensions(enemy, enemy.img, TENANT_TARGET_HEIGHT);
+                } else if (enemy.type === 'judge') {
                     enemy.imgUp = assets.judgeGavelUpImage;
                     enemy.imgDown = assets.judgeGavelDownImage;
+                    setScaledSpriteDimensions(enemy, enemy.imgUp, JUDGE_TARGET_HEIGHT);
                 }
                 enemies.push(enemy);
             });
@@ -418,12 +444,9 @@
                 assets.tenant7, assets.tenant8, assets.tenant9,
                 assets.tenant10, assets.tenant11
             ];
-            player.baseWidth = 30;
-            player.baseHeight = 40;
             player.scale = 1;
             player.health = 1;
-            player.width = player.baseWidth;
-            player.height = player.baseHeight;
+            setScaledSpriteDimensions(player, player.img, PLAYER_TARGET_HEIGHT);
             player.x = 50; player.y = GROUND_LEVEL - player.height;
             player.dx = 0; player.dy = 0;
             player.isJumping = false; player.isOnGround = true;
@@ -471,10 +494,13 @@
                 createJudge(1800, GROUND_LEVEL),
             ];
             enemies.forEach(enemy => {
-                if (enemy.type === 'tenant') enemy.img = getRandomTenantImage();
-                else if (enemy.type === 'judge') {
+                if (enemy.type === 'tenant') {
+                    enemy.img = getRandomTenantImage();
+                    setScaledSpriteDimensions(enemy, enemy.img, TENANT_TARGET_HEIGHT);
+                } else if (enemy.type === 'judge') {
                     enemy.imgUp = assets.judgeGavelUpImage;
                     enemy.imgDown = assets.judgeGavelDownImage;
+                    setScaledSpriteDimensions(enemy, enemy.imgUp, JUDGE_TARGET_HEIGHT);
                 }
             });
             
@@ -593,20 +619,24 @@
 
         function drawPlayer() { 
             if (!player.isAlive) return; 
-            const pX = player.x - cameraX; 
-            const pY = player.y; 
-            if (player.img && player.img.complete && player.img.naturalHeight !== 0) { 
-                ctx.drawImage(player.img, pX, pY, player.width, player.height); 
-            } else { 
-                const vW = player.width; const vH = player.height; const headRadius = vW / 2.5; ctx.fillStyle = '#2c3e50'; ctx.fillRect(pX + vW * 0.15, pY + vH * 0.6, vW * 0.3, vH * 0.4); ctx.fillRect(pX + vW * 0.55, pY + vH * 0.6, vW * 0.3, vH * 0.4); ctx.fillRect(pX, pY + vH * 0.2, vW, vH * 0.5); ctx.fillStyle = '#c0392b'; ctx.beginPath(); ctx.moveTo(pX + vW / 2, pY + vH * 0.22); ctx.lineTo(pX + vW * 0.4, pY + vH * 0.45); ctx.lineTo(pX + vW * 0.6, pY + vH * 0.45); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#FFDBAC'; ctx.beginPath(); ctx.arc(pX + vW / 2, pY + headRadius + vH*0.02, headRadius, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#333333'; ctx.beginPath(); ctx.arc(pX + vW / 2, pY + headRadius - headRadius*0.1 + vH*0.02, headRadius * 0.9, Math.PI, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#FFF'; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'center'; ctx.fillText("S", pX + vW / 2, pY + vH * 0.45); 
+            const pX = player.x - cameraX;
+            const pY = player.y;
+            const drawX = pX - (player.anchorX || 0) * player.width;
+            const drawY = pY - (player.anchorY || 0) * player.height;
+            if (player.img && player.img.complete && player.img.naturalHeight !== 0) {
+                ctx.drawImage(player.img, drawX, drawY, player.width, player.height);
+            } else {
+                const vW = player.width; const vH = player.height; const headRadius = vW / 2.5; ctx.fillStyle = '#2c3e50'; ctx.fillRect(drawX + vW * 0.15, drawY + vH * 0.6, vW * 0.3, vH * 0.4); ctx.fillRect(drawX + vW * 0.55, drawY + vH * 0.6, vW * 0.3, vH * 0.4); ctx.fillRect(drawX, drawY + vH * 0.2, vW, vH * 0.5); ctx.fillStyle = '#c0392b'; ctx.beginPath(); ctx.moveTo(drawX + vW / 2, drawY + vH * 0.22); ctx.lineTo(drawX + vW * 0.4, drawY + vH * 0.45); ctx.lineTo(drawX + vW * 0.6, drawY + vH * 0.45); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#FFDBAC'; ctx.beginPath(); ctx.arc(drawX + vW / 2, drawY + headRadius + vH*0.02, headRadius, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#333333'; ctx.beginPath(); ctx.arc(drawX + vW / 2, drawY + headRadius - headRadius*0.1 + vH*0.02, headRadius * 0.9, Math.PI, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#FFF'; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'center'; ctx.fillText("S", drawX + vW / 2, drawY + vH * 0.45);
             } 
         }
 
         function drawEnemies() { 
             enemies.forEach(enemy => { 
                 if (!enemy.isAlive) return; 
-                const eX = enemy.x - cameraX; 
-                const eY = enemy.y; 
+                const eX = enemy.x - cameraX;
+                const eY = enemy.y;
+                const dX = eX - (enemy.anchorX || 0) * enemy.width;
+                const dY = eY - (enemy.anchorY || 0) * enemy.height;
                 
                 let currentEnemyImage = null;
                 if (enemy.type === 'judge') {
@@ -616,13 +646,13 @@
                 }
 
                 if (currentEnemyImage && currentEnemyImage.complete && currentEnemyImage.naturalHeight !== 0) {
-                    ctx.drawImage(currentEnemyImage, eX, eY, enemy.width, enemy.height);
-                } else { 
-                    const vW = enemy.width; const vH = enemy.height; 
+                    ctx.drawImage(currentEnemyImage, dX, dY, enemy.width, enemy.height);
+                } else {
+                    const vW = enemy.width; const vH = enemy.height;
                     if (enemy.type === 'tenant') { 
-                        const headRadius = vW / 3; ctx.fillStyle = enemy.colorPants; ctx.fillRect(eX + vW * 0.1, eY + vH * 0.55, vW * 0.35, vH * 0.45); ctx.fillRect(eX + vW * 0.55, eY + vH * 0.55, vW * 0.35, vH * 0.45); ctx.fillStyle = enemy.colorBody; ctx.fillRect(eX, eY + vH * 0.2, vW, vH * 0.4); ctx.fillStyle = enemy.colorFace; ctx.beginPath(); ctx.arc(eX + vW / 2, eY + headRadius, headRadius, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#000'; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'center'; ctx.fillText("T", eX + vW / 2, eY + vH * 0.45); 
-                    } else if (enemy.type === 'judge') { 
-                        ctx.fillStyle = enemy.robeColor; ctx.beginPath(); ctx.moveTo(eX, eY + vH); ctx.lineTo(eX, eY + vH * 0.15); ctx.quadraticCurveTo(eX + vW / 2, eY, eX + vW, eY + vH * 0.15); ctx.lineTo(eX + vW, eY + vH); ctx.closePath(); ctx.fill(); const headRadius = vW / 3.5; ctx.fillStyle = enemy.faceColor; ctx.beginPath(); ctx.arc(eX + vW / 2, eY + headRadius + vH * 0.05, headRadius, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#A0522D'; const gavelHandleX = eX + vW / 2 - GAVEL_WIDTH / 8; const gavelHandleY = enemy.gavelUp ? eY - GAVEL_HEIGHT * 1.2 : eY + vH * 0.1; ctx.fillRect(gavelHandleX, gavelHandleY, GAVEL_WIDTH / 4, GAVEL_HEIGHT * 1.5); ctx.fillStyle = '#8B4513'; const gavelHeadX = eX + vW / 2 - GAVEL_WIDTH / 2; const gavelHeadY = enemy.gavelUp ? eY - GAVEL_HEIGHT * 1.8 : eY + vH * 0.1 - GAVEL_HEIGHT * 0.6; ctx.fillRect(gavelHeadX, gavelHeadY, GAVEL_WIDTH, GAVEL_HEIGHT); ctx.fillStyle = '#FFF'; ctx.font = 'bold 12px Arial'; ctx.textAlign = 'center'; ctx.fillText("J", eX + vW / 2, eY + vH * 0.5); 
+                        const headRadius = vW / 3; ctx.fillStyle = enemy.colorPants; ctx.fillRect(dX + vW * 0.1, dY + vH * 0.55, vW * 0.35, vH * 0.45); ctx.fillRect(dX + vW * 0.55, dY + vH * 0.55, vW * 0.35, vH * 0.45); ctx.fillStyle = enemy.colorBody; ctx.fillRect(dX, dY + vH * 0.2, vW, vH * 0.4); ctx.fillStyle = enemy.colorFace; ctx.beginPath(); ctx.arc(dX + vW / 2, dY + headRadius, headRadius, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#000'; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'center'; ctx.fillText("T", dX + vW / 2, dY + vH * 0.45);
+                    } else if (enemy.type === 'judge') {
+                        ctx.fillStyle = enemy.robeColor; ctx.beginPath(); ctx.moveTo(dX, dY + vH); ctx.lineTo(dX, dY + vH * 0.15); ctx.quadraticCurveTo(dX + vW / 2, dY, dX + vW, dY + vH * 0.15); ctx.lineTo(dX + vW, dY + vH); ctx.closePath(); ctx.fill(); const headRadius = vW / 3.5; ctx.fillStyle = enemy.faceColor; ctx.beginPath(); ctx.arc(dX + vW / 2, dY + headRadius + vH * 0.05, headRadius, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#A0522D'; const gavelHandleX = dX + vW / 2 - GAVEL_WIDTH / 8; const gavelHandleY = enemy.gavelUp ? dY - GAVEL_HEIGHT * 1.2 : dY + vH * 0.1; ctx.fillRect(gavelHandleX, gavelHandleY, GAVEL_WIDTH / 4, GAVEL_HEIGHT * 1.5); ctx.fillStyle = '#8B4513'; const gavelHeadX = dX + vW / 2 - GAVEL_WIDTH / 2; const gavelHeadY = enemy.gavelUp ? dY - GAVEL_HEIGHT * 1.8 : dY + vH * 0.1 - GAVEL_HEIGHT * 0.6; ctx.fillRect(gavelHeadX, gavelHeadY, GAVEL_WIDTH, GAVEL_HEIGHT); ctx.fillStyle = '#FFF'; ctx.font = 'bold 12px Arial'; ctx.textAlign = 'center'; ctx.fillText("J", dX + vW / 2, dY + vH * 0.5);
                     } 
                 } 
             }); 
