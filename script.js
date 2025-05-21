@@ -43,6 +43,8 @@
             tenantImages: [],
             judgeGavelUpImage: null, judgeGavelDownImage: null,
             apartment1: null, apartment2: null, apartment3: null, apartment4: null, apartment5: null,
+            apartment6: null, apartment7: null, apartment8: null, apartment9: null, apartment10: null,
+            apartment11: null,
             courthouse: null,
             platformTexture1: null,
             platformTexture2: null,
@@ -267,6 +269,12 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             const apartment3Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment3.png?v=1747834182727";
             const apartment4Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment2.png?v=1747834176029";
             const apartment5Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment1.png?v=1747834170065";
+            const apartment6Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment6.png?v=1747862246016";
+            const apartment7Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment7.png?v=1747862875612";
+            const apartment8Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment8.png?v=1747864054866";
+            const apartment9Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment9.png?v=1747864059985";
+            const apartment10Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment10.png?v=1747864362526";
+            const apartment11Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment11.png?v=1747864790388";
             const courthouseUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/courthouse.png?v=1747834164056";
             const platformTexture1Url = "https://cdn.glitch.global/a5785753-17af-4b26-97de-a03aca9da4c7/ambulance.png?v=1747842095209"; // Metal balcony texture
             const platformTexture2Url = "https://cdn.glitch.global/a5785753-17af-4b26-97de-a03aca9da4c7/police.png?v=1747842118310"; // Scaffolding texture
@@ -283,6 +291,12 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             const apartment3Placeholder = `https://placehold.co/160x280/A0522D/FFFFFF?text=Apt3`;
             const apartment4Placeholder = `https://placehold.co/170x240/8C7853/FFFFFF?text=Apt4`;
             const apartment5Placeholder = `https://placehold.co/140x260/757575/FFFFFF?text=Apt5`;
+            const apartment6Placeholder = `https://placehold.co/150x250/8C7853/FFFFFF?text=Apt6`;
+            const apartment7Placeholder = `https://placehold.co/150x250/757575/FFFFFF?text=Apt7`;
+            const apartment8Placeholder = `https://placehold.co/150x250/A0522D/FFFFFF?text=Apt8`;
+            const apartment9Placeholder = `https://placehold.co/150x250/8C7853/FFFFFF?text=Apt9`;
+            const apartment10Placeholder = `https://placehold.co/150x250/757575/FFFFFF?text=Apt10`;
+            const apartment11Placeholder = `https://placehold.co/150x250/A0522D/FFFFFF?text=Apt11`;
             const courthousePlaceholder = `https://placehold.co/250x300/C0C0C0/000000?text=Courthouse`;
             const platformTexture1Placeholder = `https://placehold.co/120x40/696969/FFFFFF?text=P1`;
             const platformTexture2Placeholder = `https://placehold.co/120x40/909090/FFFFFF?text=P2`;
@@ -301,6 +315,12 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             loadImage(apartment3Url, 'apartment3', apartment3Placeholder);
             loadImage(apartment4Url, 'apartment4', apartment4Placeholder);
             loadImage(apartment5Url, 'apartment5', apartment5Placeholder);
+            loadImage(apartment6Url, 'apartment6', apartment6Placeholder);
+            loadImage(apartment7Url, 'apartment7', apartment7Placeholder);
+            loadImage(apartment8Url, 'apartment8', apartment8Placeholder);
+            loadImage(apartment9Url, 'apartment9', apartment9Placeholder);
+            loadImage(apartment10Url, 'apartment10', apartment10Placeholder);
+            loadImage(apartment11Url, 'apartment11', apartment11Placeholder);
             loadImage(courthouseUrl, 'courthouse', courthousePlaceholder);
             loadImage(platformTexture1Url, 'platformTexture1', platformTexture1Placeholder);
             loadImage(platformTexture2Url, 'platformTexture2', platformTexture2Placeholder);
@@ -385,6 +405,12 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             addBuilding('apartment3', 150, 260);
             addBuilding('apartment4', 170, 280);
             addBuilding('apartment5', 130, 240);
+            addBuilding('apartment6', 160, 270);
+            addBuilding('apartment7', 150, 260);
+            addBuilding('apartment8', 155, 265);
+            addBuilding('apartment9', 165, 275);
+            addBuilding('apartment10', 145, 255);
+            addBuilding('apartment11', 175, 285);
             addBuilding('apartment1', 165, 275);
             addBuilding('courthouse', 210, 300);
             addBuilding('apartment3', 155, 265);

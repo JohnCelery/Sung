@@ -24,6 +24,9 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.8);
+            background-image: url('https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/characterSelect.png?v=1747863236306');
+            background-size: cover;
+            background-position: center;
             display: flex;
             flex-direction: column;
             align-items: center;
