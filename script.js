@@ -4,6 +4,8 @@
         const loadingMessageElement = document.getElementById('loadingMessage');
         const healthDisplay = document.getElementById('healthDisplay');
         const evictionDisplay = document.getElementById('evictionTally');
+        const characterSelect = document.getElementById('characterSelect');
+        let selectedCharacter = 'sung';
 
         const GAME_WIDTH = 800;
         const GAME_HEIGHT = 400;
@@ -155,7 +157,8 @@
             assetsToLoad = 0; assetsLoaded = 0;
 
             // --- PASTE YOUR FULL IMAGE URLs HERE ---
-            const sungImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/sung.png?v=1747832341324"; 
+            const sungImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/sung.png?v=1747832341324";
+            const mattImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/Matt.png?v=1747839843908";
             const tenantImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/tenant.png?v=1747832331684"; 
             const judgeGavelUpImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/judge_gavel_up.png?v=1747832367574";   
             const judgeGavelDownImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/judge_gavel_down.png?v=1747832359174";   
@@ -171,6 +174,7 @@
             // --- END OF URLS TO PASTE ---
 
             const sungPlaceholder = `https://placehold.co/${player.width}x${player.height}/FFD700/000000?text=Sung`;
+            const mattPlaceholder = `https://placehold.co/${player.width}x${player.height}/00BFFF/000000?text=Matt`;
             const tenantPlaceholder = `https://placehold.co/${TENANT_WIDTH}x${TENANT_HEIGHT}/4169E1/FFFFFF?text=T`;
             const judgeGavelUpPlaceholder = `https://placehold.co/${JUDGE_WIDTH}x${JUDGE_HEIGHT}/8A2BE2/FFFFFF?text=J_Up`;   
             const judgeGavelDownPlaceholder = `https://placehold.co/${JUDGE_WIDTH}x${JUDGE_HEIGHT}/6A0DAD/FFFFFF?text=J_Down`;   
@@ -184,7 +188,9 @@
             const platformTexture1Placeholder = `https://placehold.co/120x40/696969/FFFFFF?text=P1`;
             const platformTexture2Placeholder = `https://placehold.co/120x40/909090/FFFFFF?text=P2`;
 
-            loadImage(sungImageUrl, 'playerImage', sungPlaceholder);
+            const playerUrl = selectedCharacter === 'matt' ? mattImageUrl : sungImageUrl;
+            const playerPlaceholder = selectedCharacter === 'matt' ? mattPlaceholder : sungPlaceholder;
+            loadImage(playerUrl, 'playerImage', playerPlaceholder);
             loadImage(tenantImageUrl, 'tenantImage', tenantPlaceholder);
             loadImage(judgeGavelUpImageUrl, 'judgeGavelUpImage', judgeGavelUpPlaceholder);
             loadImage(judgeGavelDownImageUrl, 'judgeGavelDownImage', judgeGavelDownPlaceholder);
@@ -714,4 +720,10 @@
             requestAnimationFrame(gameLoop);
         }
 
-        loadAllAssets();
+        document.querySelectorAll('.character-option').forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedCharacter = btn.dataset.char;
+                if (characterSelect) characterSelect.style.display = 'none';
+                loadAllAssets();
+            });
+        });
