@@ -43,6 +43,10 @@
             font-size: 18px;
             cursor: pointer;
         }
+        #characterSelect .character-options {
+            display: flex;
+            flex-direction: row;
+        }
         canvas {
             display: block;
             width: 100%;
@@ -91,6 +95,12 @@
         }
         .game_over_message_container .title { font-size: 1em; margin-bottom: 10px; }
         .game_over_message_container .restart-text { font-size: 0.6em; margin-top: 10px; margin-bottom: 15px; }
+        .game-over-graphic {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
 
         #loadingMessage {
             position: absolute;
