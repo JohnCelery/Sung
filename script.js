@@ -1,18 +1,36 @@
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const gameContainer = document.getElementById('gameContainer');
-        const loadingMessageElement = document.getElementById('loadingMessage');
-        const healthDisplay = document.getElementById('healthDisplay');
-        const evictionDisplay = document.getElementById('evictionTally');
-        const characterSelect = document.getElementById('characterSelect');
-        let selectedCharacter = 'sung';
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const gameContainer = document.getElementById('gameContainer');
+const loadingMessageElement = document.getElementById('loadingMessage');
+const healthDisplay = document.getElementById('healthDisplay');
+const evictionDisplay = document.getElementById('evictionTally');
+const characterSelect = document.getElementById('characterSelect');
+const mobileControls = document.getElementById('mobileControls');
+const btnLeft = document.getElementById('btnLeft');
+const btnRight = document.getElementById('btnRight');
+const btnJump = document.getElementById('btnJump');
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+let selectedCharacter = 'sung';
 
-        const GAME_WIDTH = 1600;
-        const GAME_HEIGHT = 800;
-        canvas.width = GAME_WIDTH;
-        canvas.height = GAME_HEIGHT;
-        gameContainer.style.width = `${GAME_WIDTH}px`;
-        gameContainer.style.height = `${GAME_HEIGHT}px`;
+const GAME_WIDTH = 1600;
+const GAME_HEIGHT = 800;
+canvas.width = GAME_WIDTH;
+canvas.height = GAME_HEIGHT;
+gameContainer.style.width = `${GAME_WIDTH}px`;
+gameContainer.style.height = `${GAME_HEIGHT}px`;
+
+function resizeGame() {
+    const ww = window.innerWidth;
+    const wh = window.innerHeight;
+    const scale = Math.min(ww / GAME_WIDTH, wh / GAME_HEIGHT);
+    gameContainer.style.transform = `scale(${scale})`;
+    gameContainer.style.transformOrigin = 'top left';
+    gameContainer.style.left = ((ww - GAME_WIDTH * scale) / 2) + 'px';
+    gameContainer.style.top = ((wh - GAME_HEIGHT * scale) / 2) + 'px';
+}
+window.addEventListener('resize', resizeGame);
+window.addEventListener('orientationchange', resizeGame);
+resizeGame();
 
         let WORLD_WIDTH = 3000;
         const SEGMENT_WIDTH = 1800;
@@ -204,7 +222,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             "CARES ACT APPLICABLE!"
         ];
 
-        const tenantHitMessages = [
+const tenantHitMessages = [
             "LEGAL SERVICES RETAINED!",
             "MOTION TO TRANSFER FILED!",
             "COUNTERCLAIM SERVED!",
@@ -215,9 +233,24 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             "ADJOURNMENT REQUEST GRANTED!",
             "HOUSING ADVOCATE ENGAGED!",
             "MONEY PAID INTO COURT!"
-        ];
+];
 
-        const keys = { left: false, right: false, up: false };
+const keys = { left: false, right: false, up: false };
+
+function setupMobileControls() {
+    if (!isTouchDevice || !mobileControls) return;
+    mobileControls.style.display = 'flex';
+    const prevent = e => e.preventDefault();
+    btnLeft.addEventListener('touchstart', e => { prevent(e); keys.left = true; });
+    btnLeft.addEventListener('touchend', e => { prevent(e); keys.left = false; });
+    btnLeft.addEventListener('touchcancel', e => { prevent(e); keys.left = false; });
+    btnRight.addEventListener('touchstart', e => { prevent(e); keys.right = true; });
+    btnRight.addEventListener('touchend', e => { prevent(e); keys.right = false; });
+    btnRight.addEventListener('touchcancel', e => { prevent(e); keys.right = false; });
+    btnJump.addEventListener('touchstart', e => { prevent(e); keys.up = true; });
+    btnJump.addEventListener('touchend', e => { prevent(e); keys.up = false; });
+    btnJump.addEventListener('touchcancel', e => { prevent(e); keys.up = false; });
+}
 
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') keys.left = true;
@@ -1010,13 +1043,15 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             requestAnimationFrame(gameLoop);
         }
 
-        window.addEventListener('DOMContentLoaded', function() {
-            var charButtons = document.querySelectorAll('.character-option');
-            Array.prototype.forEach.call(charButtons, function(btn) {
-                btn.addEventListener('click', function() {
-                    selectedCharacter = this.dataset.char;
-                    if (characterSelect) characterSelect.style.display = 'none';
-                    loadAllAssets();
-                });
-            });
+window.addEventListener('DOMContentLoaded', function() {
+    var charButtons = document.querySelectorAll('.character-option');
+    Array.prototype.forEach.call(charButtons, function(btn) {
+        btn.addEventListener('click', function() {
+            selectedCharacter = this.dataset.char;
+            if (characterSelect) characterSelect.style.display = 'none';
+            loadAllAssets();
         });
+    });
+    setupMobileControls();
+    resizeGame();
+});
