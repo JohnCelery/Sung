@@ -38,18 +38,18 @@ const PROMOTION_MESSAGES = {
 
         // Placeholder URLs for power up/down graphics. Replace with real URLs.
         const POWER_GRAPHICS = {
-            up5: 'PASTE_UP_LEVEL_5_URL_HERE',
-            up10: 'PASTE_UP_LEVEL_10_URL_HERE',
-            up15: 'PASTE_UP_LEVEL_15_URL_HERE',
-            up25: 'PASTE_UP_LEVEL_25_URL_HERE',
-            down15: 'PASTE_DOWN_BELOW_15_URL_HERE',
-            down10: 'PASTE_DOWN_BELOW_10_URL_HERE',
-            down5: 'PASTE_DOWN_BELOW_5_URL_HERE',
+            up5: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/UpLevel5.png?v=1747927417640',
+            up10: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/UpLevel10.png?v=1747927586521',
+            up15: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/UpLevel15.png?v=1747938696154',
+            up25: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/UpLevel25.png?v=1747943081893',
+            down15: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/DownLevel10.png?v=1747938749600',
+            down10: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/DownLevel5.png?v=1747938831848',
+            down5: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/DownLevel1.png?v=1747939554005',
             down25: 'PASTE_DOWN_BELOW_25_URL_HERE'
         };
 
         // Placeholder URL for the image shown when the player dies
-        const GAME_OVER_GRAPHIC_URL = 'PASTE_GAME_OVER_GRAPHIC_URL_HERE';
+        const GAME_OVER_GRAPHIC_URL = 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/GameOver.png?v=1747943794163';
 
         let assets = {
             playerImage: null,
@@ -321,7 +321,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             const mattLevel5Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel5.png?v=1747913492251";
             const mattLevel10Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel10.png?v=1747913776047";
             const mattLevel15Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel15.png?v=1747914006982";
-            const level25Url = 'PASTE_LEVEL_25_MODEL_URL_HERE';
+            const level25Url = 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/ManagingPartner.png?v=1747940239836';
             const tenantUrls = [
                 "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant2.png?v=1747857286015",
                 "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant1.png?v=1747832331684",
