@@ -72,6 +72,8 @@
         .hardship { background-color: #f44336; color: white; }
         .jop_granted { background-color: #2196F3; color: white; }
         .otsc_granted { background-color: #FF9800; color: white; }
+        .promotion { background-color: #FFD700; color: black; }
+        .demotion { background-color: #8B0000; color: white; }
         
         .game_over_message_container {
             position: absolute;

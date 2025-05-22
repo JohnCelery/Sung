@@ -27,8 +27,18 @@
         const TENANT_TARGET_HEIGHT = 2 * TILE * SPRITE_SCALE;
         const JUDGE_TARGET_HEIGHT = 2.5 * TILE * SPRITE_SCALE;
 
+        const PROMOTION_THRESHOLDS = [5, 10, 15];
+        const PROMOTION_MESSAGES = {
+            5: "PROMOTED: SENIOR ASSOCIATE!",
+            10: "PROMOTED: PARTNER!",
+            15: "PROMOTED: NAME PARTNER!"
+        };
+
         let assets = {
             playerImage: null,
+            playerImage5: null,
+            playerImage10: null,
+            playerImage15: null,
             tenant1: null,
             tenant2: null,
             tenant3: null,
@@ -58,7 +68,7 @@
             width: 30, height: 40,
             baseWidth: 30, baseHeight: 40,
             scale: 1,
-            health: 1, maxHealth: 10,
+            health: 1, maxHealth: 15,
             dx: 0, dy: 0, speed: 4, jumpPower: 12,
             isJumping: false, isOnGround: true,
             img: null, isAlive: true
@@ -248,6 +258,13 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             // --- PASTE YOUR FULL IMAGE URLs HERE ---
             const sungImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/sung.png?v=1747832341324";
             const mattImageUrl = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/matt2.png?v=1747857386593";
+            // --- Placeholder URLs for promotions ---
+            const sungLevel5Url = "INSERT_SUNG_LEVEL5_URL";
+            const sungLevel10Url = "INSERT_SUNG_LEVEL10_URL";
+            const sungLevel15Url = "INSERT_SUNG_LEVEL15_URL";
+            const mattLevel5Url = "INSERT_MATT_LEVEL5_URL";
+            const mattLevel10Url = "INSERT_MATT_LEVEL10_URL";
+            const mattLevel15Url = "INSERT_MATT_LEVEL15_URL";
             const tenantUrls = [
                 "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant2.png?v=1747857286015",
                 "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant1.png?v=1747832331684",
@@ -282,6 +299,8 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
 
             const sungPlaceholder = `https://placehold.co/${player.width}x${player.height}/FFD700/000000?text=Sung`;
             const mattPlaceholder = `https://placehold.co/${player.width}x${player.height}/00BFFF/000000?text=Matt`;
+            const sungPromotePlaceholder = sungPlaceholder;
+            const mattPromotePlaceholder = mattPlaceholder;
             const tenantPlaceholder = `https://placehold.co/${TENANT_WIDTH}x${TENANT_HEIGHT}/4169E1/FFFFFF?text=T`;
             const judgeGavelUpPlaceholder = `https://placehold.co/${JUDGE_WIDTH}x${JUDGE_HEIGHT}/8A2BE2/FFFFFF?text=J_Up`;   
             const judgeGavelDownPlaceholder = `https://placehold.co/${JUDGE_WIDTH}x${JUDGE_HEIGHT}/6A0DAD/FFFFFF?text=J_Down`;   
@@ -303,7 +322,14 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
 
             const playerUrl = selectedCharacter === 'matt' ? mattImageUrl : sungImageUrl;
             const playerPlaceholder = selectedCharacter === 'matt' ? mattPlaceholder : sungPlaceholder;
+            const lvl5Url = selectedCharacter === 'matt' ? mattLevel5Url : sungLevel5Url;
+            const lvl10Url = selectedCharacter === 'matt' ? mattLevel10Url : sungLevel10Url;
+            const lvl15Url = selectedCharacter === 'matt' ? mattLevel15Url : sungLevel15Url;
+
             loadImage(playerUrl, 'playerImage', playerPlaceholder);
+            loadImage(lvl5Url, 'playerImage5', playerPlaceholder);
+            loadImage(lvl10Url, 'playerImage10', playerPlaceholder);
+            loadImage(lvl15Url, 'playerImage15', playerPlaceholder);
             tenantUrls.forEach((url, idx) => {
                 loadImage(url, `tenant${idx + 1}`, tenantPlaceholder);
             });
@@ -472,7 +498,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             ];
             player.scale = 1;
             player.health = 1;
-            setScaledSpriteDimensions(player, player.img, PLAYER_TARGET_HEIGHT);
+            updatePlayerImage();
             player.x = 50; player.y = GROUND_LEVEL - player.height;
             player.dx = 0; player.dy = 0;
             player.isJumping = false; player.isOnGround = true;
@@ -556,9 +582,22 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             player.y -= player.height - prevHeight;
         }
 
+        function updatePlayerImage() {
+            if (player.health >= 15 && assets.playerImage15) player.img = assets.playerImage15;
+            else if (player.health >= 10 && assets.playerImage10) player.img = assets.playerImage10;
+            else if (player.health >= 5 && assets.playerImage5) player.img = assets.playerImage5;
+            else player.img = assets.playerImage;
+            setScaledSpriteDimensions(player, player.img, PLAYER_TARGET_HEIGHT);
+        }
+
         function gainHealth() {
             if (player.health < player.maxHealth) {
+                const prev = player.health;
                 player.health++;
+                if (PROMOTION_THRESHOLDS.includes(player.health)) {
+                    addGameMessage(PROMOTION_MESSAGES[player.health], player.x, player.y - 20, 'promotion');
+                }
+                updatePlayerImage();
                 updatePlayerSize();
                 updateHealthDisplay();
             }
@@ -566,7 +605,12 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
 
         function loseHealth(reason, typeClass) {
             if (player.health > 1) {
+                const prev = player.health;
                 player.health--;
+                if (PROMOTION_THRESHOLDS.some(t => prev >= t && player.health < t)) {
+                    addGameMessage('DEMOTED', player.x, player.y - 20, 'demotion');
+                }
+                updatePlayerImage();
                 updatePlayerSize();
                 updateHealthDisplay();
                 addGameMessage(reason, player.x, player.y - 20, typeClass);
@@ -797,18 +841,15 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
         function drawGameOverMessage() {
             if (gameOver && !player.isAlive) {
                 let msgContainer = gameContainer.querySelector('.game_over_message_container');
-                if (!msgContainer) { 
+                if (!msgContainer) {
                     msgContainer = document.createElement('div');
                     msgContainer.className = 'game_over_message_container';
                     msgContainer.innerHTML = `
-                        <div class="title">GAME OVER!</div>
-                        <div class="game-over-reason" style="font-size: 0.7em; color: #FF6347; margin-bottom: 10px;">${gameOverReason}</div>
+                        <div class="title">FIRED!</div>
+                        <div class="game-over-reason" style="font-size: 0.7em; color: #FF6347; margin-bottom: 10px;">Housing is a human right!</div>
                         <div class="restart-text">Press 'R' to Restart</div>
                     `;
                     gameContainer.appendChild(msgContainer);
-                } else { 
-                    const reasonDiv = msgContainer.querySelector('.game-over-reason');
-                    if (reasonDiv) reasonDiv.textContent = gameOverReason;
                 }
 
             } else {
