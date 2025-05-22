@@ -259,12 +259,12 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             const sungImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/sung.png?v=1747832341324";
             const mattImageUrl = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/matt2.png?v=1747857386593";
             // --- Placeholder URLs for promotions ---
-            const sungLevel5Url = "INSERT_SUNG_LEVEL5_URL";
-            const sungLevel10Url = "INSERT_SUNG_LEVEL10_URL";
-            const sungLevel15Url = "INSERT_SUNG_LEVEL15_URL";
-            const mattLevel5Url = "INSERT_MATT_LEVEL5_URL";
-            const mattLevel10Url = "INSERT_MATT_LEVEL10_URL";
-            const mattLevel15Url = "INSERT_MATT_LEVEL15_URL";
+            const sungLevel5Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/SungLevel5.png?v=1747914134048";
+            const sungLevel10Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/SungLevel10.png?v=1747914425322";
+            const sungLevel15Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/SungLevel15.png?v=1747914802560";
+            const mattLevel5Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel5.png?v=1747913492251";
+            const mattLevel10Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel10.png?v=1747913776047";
+            const mattLevel15Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel15.png?v=1747914006982";
             const tenantUrls = [
                 "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant2.png?v=1747857286015",
                 "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant1.png?v=1747832331684",
