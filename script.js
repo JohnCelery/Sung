@@ -651,19 +651,19 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             setScaledSpriteDimensions(player, player.img, PLAYER_TARGET_HEIGHT);
         }
 
-        function pauseWithGraphic(url, callback) {
+        function pauseWithGraphic(url, callback, extraClass = '') {
             if (!url) { if (callback) callback(); return; }
             if (gamePaused) { if (callback) callback(); return; }
             gamePaused = true;
             const img = document.createElement('img');
             img.src = url;
-            img.className = 'power-up-graphic';
+            img.className = 'power-up-graphic' + (extraClass ? ' ' + extraClass : '');
             gameContainer.appendChild(img);
             setTimeout(() => {
                 if (gameContainer.contains(img)) gameContainer.removeChild(img);
                 gamePaused = false;
                 if (callback) callback();
-            }, 1200); // under 1.5s
+            }, 2000);
         }
 
         function getPowerUpGraphic(newHealth) {
@@ -698,7 +698,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                     if (player.health === player.maxHealth) player.invincible = true;
                 };
                 const graphic = getPowerUpGraphic(player.health);
-                if (graphic) pauseWithGraphic(graphic, after); else after();
+                if (graphic) pauseWithGraphic(graphic, after, 'level-up'); else after();
             }
         }
 
@@ -718,7 +718,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                     addGameMessage(reason, player.x, player.y - 20, typeClass);
                 };
                 const graphic = getPowerDownGraphic(prev, player.health);
-                if (graphic) pauseWithGraphic(graphic, after); else after();
+                if (graphic) pauseWithGraphic(graphic, after, 'demotion'); else after();
             } else {
                 setGameOver(reason);
             }
