@@ -895,31 +895,4 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                     loadAllAssets();
                 });
             });
-
-            const rotatePrompt = document.getElementById('rotatePrompt');
-            function checkOrientation() {
-                if (window.innerWidth >= window.innerHeight) {
-                    rotatePrompt.classList.remove('visible');
-                } else {
-                    rotatePrompt.classList.add('visible');
-                }
-            }
-            checkOrientation();
-            window.addEventListener('resize', checkOrientation);
-            window.addEventListener('orientationchange', checkOrientation);
-
-            const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            if (isMobile) {
-                const leftBtn = document.getElementById('touch-left');
-                const rightBtn = document.getElementById('touch-right');
-                const upBtn = document.getElementById('touch-up');
-                function bindTouch(btn, key) {
-                    btn.addEventListener('touchstart', function(e) { e.preventDefault(); keys[key] = true; });
-                    btn.addEventListener('touchend', function(e) { e.preventDefault(); keys[key] = false; });
-                    btn.addEventListener('touchcancel', function(e) { e.preventDefault(); keys[key] = false; });
-                }
-                bindTouch(leftBtn, 'left');
-                bindTouch(rightBtn, 'right');
-                bindTouch(upBtn, 'up');
-            }
         });
