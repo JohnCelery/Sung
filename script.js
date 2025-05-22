@@ -142,11 +142,11 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
 
         const tenantElimMessagesMax = [
             "Pack it up, cocksucker—rent’s due",
-            "No greens? No mercy!",
+            "No greens? No mercy COCKSUCKER!",
             "You look like Section 8 in human form.",
-            "This is what happens when you trust a handshake over a greensheet!",
+            "I cam here to collect greensheets and evict cocksuckers!",
             "Where's Legal Aid now, cocksucker!",
-            "Back to the block with you—I’ve got townhouses to gentrify!",
+            "Smell that? That's the smell of gentrification, cocksucker!",
             "Section 8 doesn’t cover broken jaws - cocksucker",
             "You call that a hardship? Try homelessness.",
             "Didn’t I evict your cousin last week?",
@@ -170,7 +170,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
         ];
 
         const judgeElimMessagesMax = [
-            "Another gavel bites the dust.",
+            "Another gavel bites the dust. And you're a cocksucker.",
             "You're not on the bench anymore, you're under it...cocksucker",
             "Judicial discretion my ass, cocksucker",
             "The court is adjourned—indefinitely.",
@@ -181,9 +181,9 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             "Your motion for mercy is denied.",
             "You got tenure—I got greens.",
             "Your pension won’t save you now.",
-            "I’ve got more assets than you’ve got rulings.",
+            "YOU. ARE. A. COCKSUCKER!",
             "The only robe I respect is silk with cufflinks.",
-            "Another obstacle between me and my next BMW—removed.",
+            "Another cocksucker between me and my next BMW—removed.",
             "Justice is blind—and now it's dead.",
             "Retirement came early, courtesy of my greensheet."
         ];
@@ -345,7 +345,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             const apartment5Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment1.png?v=1747834170065";
             const apartment6Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment6.png?v=1747862246016";
             const apartment7Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment7.png?v=1747862875612";
-            const apartment8Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment8.png?v=1747912124909";
+            const apartment8Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/Apartment8.png?v=1747938717870";
             const apartment9Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment9.png?v=1747864059985";
             const apartment10Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment10.png?v=1747864362526";
             const apartment11Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment11.png?v=1747864790388";
