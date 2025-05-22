@@ -28,11 +28,12 @@
         const TENANT_TARGET_HEIGHT = 2.5 * TILE * SPRITE_SCALE;
         const JUDGE_TARGET_HEIGHT = 2.5 * TILE * SPRITE_SCALE;
 
-const PROMOTION_THRESHOLDS = [5, 10, 15];
+const PROMOTION_THRESHOLDS = [5, 10, 15, 25];
 const PROMOTION_MESSAGES = {
     5: "PROMOTED: SENIOR ASSOCIATE!",
     10: "PROMOTED: PARTNER!",
-    15: "PROMOTED: NAME PARTNER!"
+    15: "PROMOTED: NAME PARTNER!",
+    25: "PROMOTED: LEGENDARY PARTNER!"
 };
 
         // Placeholder URLs for power up/down graphics. Replace with real URLs.
@@ -40,9 +41,11 @@ const PROMOTION_MESSAGES = {
             up5: 'PASTE_UP_LEVEL_5_URL_HERE',
             up10: 'PASTE_UP_LEVEL_10_URL_HERE',
             up15: 'PASTE_UP_LEVEL_15_URL_HERE',
+            up25: 'PASTE_UP_LEVEL_25_URL_HERE',
             down15: 'PASTE_DOWN_BELOW_15_URL_HERE',
             down10: 'PASTE_DOWN_BELOW_10_URL_HERE',
-            down5: 'PASTE_DOWN_BELOW_5_URL_HERE'
+            down5: 'PASTE_DOWN_BELOW_5_URL_HERE',
+            down25: 'PASTE_DOWN_BELOW_25_URL_HERE'
         };
 
         // Placeholder URL for the image shown when the player dies
@@ -53,6 +56,7 @@ const PROMOTION_MESSAGES = {
             playerImage5: null,
             playerImage10: null,
             playerImage15: null,
+            playerImage25: null,
             tenant1: null,
             tenant2: null,
             tenant3: null,
@@ -84,7 +88,8 @@ const PROMOTION_MESSAGES = {
             width: 30, height: 40,
             baseWidth: 30, baseHeight: 40,
             scale: 1,
-            health: 1, maxHealth: 15,
+            health: 1, maxHealth: 25,
+            invincible: false,
             dx: 0, dy: 0, speed: 4, jumpPower: 12,
             isJumping: false, isOnGround: true,
             img: null, isAlive: true
@@ -120,7 +125,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
         let gameOverReason = "";
         let gameWon = false;
         let evictionCount = 0;
-        const EVICTION_TARGET = 25;
+        const EVICTION_TARGET = 50;
 
         const tenantElimMessages = [
             "EVICTED!",
@@ -135,6 +140,22 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             "MARINI DENIED!"
         ];
 
+        const tenantElimMessagesMax = [
+            "Pack it up, cocksucker—rent’s due",
+            "No greens? No mercy!",
+            "You look like Section 8 in human form.",
+            "This is what happens when you trust a handshake over a greensheet!",
+            "Where's Legal Aid now, cocksucker!",
+            "Back to the block with you—I’ve got townhouses to gentrify!",
+            "Section 8 doesn’t cover broken jaws - cocksucker",
+            "You call that a hardship? Try homelessness.",
+            "Didn’t I evict your cousin last week?",
+            "You people always got excuses and no damn greens.",
+            "Cocksucking cocksucker!",
+            "Show me the greensheet or show me the door—your door.",
+            "This whole building smells like broken promises."
+        ];
+
         const judgeElimMessages = [
             "OTSC DENIED!",
             "MOTION TO RECONSIDER REJECTED!",
@@ -146,6 +167,25 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             "CHAMBERS CLOSED!",
             "SUA SPONTE SHUTDOWN!",
             "HEARSAY OVERRULED!"
+        ];
+
+        const judgeElimMessagesMax = [
+            "Another gavel bites the dust.",
+            "You're not on the bench anymore, you're under it...cocksucker",
+            "Judicial discretion my ass, cocksucker",
+            "The court is adjourned—indefinitely.",
+            "Ever seen a name partner kill a judge? Now you have.",
+            "Call the Appellate Division. Tell 'em you're dead.",
+            "From superior court to superior corpse.",
+            "They should’ve recused you... from breathing.",
+            "Your motion for mercy is denied.",
+            "You got tenure—I got greens.",
+            "Your pension won’t save you now.",
+            "I’ve got more assets than you’ve got rulings.",
+            "The only robe I respect is silk with cufflinks.",
+            "Another obstacle between me and my next BMW—removed.",
+            "Justice is blind—and now it's dead.",
+            "Retirement came early, courtesy of my greensheet."
         ];
 
         const judgeHitMessages = [
@@ -281,6 +321,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             const mattLevel5Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel5.png?v=1747913492251";
             const mattLevel10Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel10.png?v=1747913776047";
             const mattLevel15Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel15.png?v=1747914006982";
+            const level25Url = 'PASTE_LEVEL_25_MODEL_URL_HERE';
             const tenantUrls = [
                 "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant2.png?v=1747857286015",
                 "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant1.png?v=1747832331684",
@@ -341,11 +382,13 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             const lvl5Url = selectedCharacter === 'matt' ? mattLevel5Url : sungLevel5Url;
             const lvl10Url = selectedCharacter === 'matt' ? mattLevel10Url : sungLevel10Url;
             const lvl15Url = selectedCharacter === 'matt' ? mattLevel15Url : sungLevel15Url;
+            const lvl25Url = level25Url;
 
             loadImage(playerUrl, 'playerImage', playerPlaceholder);
             loadImage(lvl5Url, 'playerImage5', playerPlaceholder);
             loadImage(lvl10Url, 'playerImage10', playerPlaceholder);
             loadImage(lvl15Url, 'playerImage15', playerPlaceholder);
+            loadImage(lvl25Url, 'playerImage25', playerPlaceholder);
             tenantUrls.forEach((url, idx) => {
                 loadImage(url, `tenant${idx + 1}`, tenantPlaceholder);
             });
@@ -514,6 +557,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             ];
             player.scale = 1;
             player.health = 1;
+            player.invincible = false;
             updatePlayerImage();
             player.x = 50; player.y = GROUND_LEVEL - player.height;
             player.dx = 0; player.dy = 0;
@@ -592,14 +636,15 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
 
         function updatePlayerSize() {
             const prevHeight = player.height;
-            player.scale = 1 + 0.1 * (player.health - 1);
+            player.scale = 1 + 0.07 * (player.health - 1);
             player.width = player.baseWidth * player.scale;
             player.height = player.baseHeight * player.scale;
             player.y -= player.height - prevHeight;
         }
 
         function updatePlayerImage() {
-            if (player.health >= 15 && assets.playerImage15) player.img = assets.playerImage15;
+            if (player.health >= 25 && assets.playerImage25) player.img = assets.playerImage25;
+            else if (player.health >= 15 && assets.playerImage15) player.img = assets.playerImage15;
             else if (player.health >= 10 && assets.playerImage10) player.img = assets.playerImage10;
             else if (player.health >= 5 && assets.playerImage5) player.img = assets.playerImage5;
             else player.img = assets.playerImage;
@@ -626,11 +671,13 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                 case 5: return POWER_GRAPHICS.up5;
                 case 10: return POWER_GRAPHICS.up10;
                 case 15: return POWER_GRAPHICS.up15;
+                case 25: return POWER_GRAPHICS.up25;
                 default: return null;
             }
         }
 
         function getPowerDownGraphic(prevHealth, newHealth) {
+            if (prevHealth >= 25 && newHealth < 25) return POWER_GRAPHICS.down25;
             if (prevHealth >= 15 && newHealth < 15) return POWER_GRAPHICS.down15;
             if (prevHealth >= 10 && newHealth < 10) return POWER_GRAPHICS.down10;
             if (prevHealth >= 5 && newHealth < 5) return POWER_GRAPHICS.down5;
@@ -648,6 +695,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                     updatePlayerImage();
                     updatePlayerSize();
                     updateHealthDisplay();
+                    if (player.health === player.maxHealth) player.invincible = true;
                 };
                 const graphic = getPowerUpGraphic(player.health);
                 if (graphic) pauseWithGraphic(graphic, after); else after();
@@ -655,9 +703,11 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
         }
 
         function loseHealth(reason, typeClass) {
+            if (player.invincible) return;
             if (player.health > 1) {
                 const prev = player.health;
                 player.health--;
+                if (player.health < player.maxHealth) player.invincible = false;
                 const after = () => {
                     if (PROMOTION_THRESHOLDS.some(t => prev >= t && player.health < t)) {
                         addGameMessage('DEMOTED', player.x, player.y - 20, 'demotion');
@@ -688,7 +738,8 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                     if (player.dy > 0 && prevPlayerBottom <= enemy.y + 5) {
                         if (enemy.type === 'tenant') {
                             enemy.isAlive = false;
-                            const msg = tenantElimMessages[Math.floor(Math.random() * tenantElimMessages.length)];
+                            const pool = player.health >= player.maxHealth ? tenantElimMessagesMax : tenantElimMessages;
+                            const msg = pool[Math.floor(Math.random() * pool.length)];
                             addGameMessage(msg, enemy.x, enemy.y - 20, 'evicted');
                             player.dy = -player.jumpPower / 1.5;
                             gainHealth();
@@ -700,12 +751,13 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                         } else if (enemy.type === 'judge') {
                             if (!enemy.gavelUp) {
                                 enemy.isAlive = false;
-                                const msg = judgeElimMessages[Math.floor(Math.random() * judgeElimMessages.length)];
+                                const pool = player.health >= player.maxHealth ? judgeElimMessagesMax : judgeElimMessages;
+                                const msg = pool[Math.floor(Math.random() * pool.length)];
                                 addGameMessage(msg, enemy.x, enemy.y - 20, 'jop_granted');
                                 player.dy = -player.jumpPower / 1.5;
                             } else {
                                 const msg = judgeHitMessages[Math.floor(Math.random() * judgeHitMessages.length)];
-                                if (now - enemy.lastDamageTime > 1000) {
+                                if (!player.invincible && now - enemy.lastDamageTime > 1000) {
                                     loseHealth(msg, 'otsc_granted');
                                     enemy.lastDamageTime = now;
                                 }
@@ -714,7 +766,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                     } else {
                         if (enemy.type === 'tenant') {
                             const msg = tenantHitMessages[Math.floor(Math.random() * tenantHitMessages.length)];
-                            if (now - enemy.lastDamageTime > 1000) {
+                            if (!player.invincible && now - enemy.lastDamageTime > 1000) {
                                 loseHealth(msg, 'hardship');
                                 enemy.lastDamageTime = now;
                             }
@@ -725,7 +777,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                             }
                         } else if (enemy.type === 'judge') {
                             const msg = judgeHitMessages[Math.floor(Math.random() * judgeHitMessages.length)];
-                            if (now - enemy.lastDamageTime > 1000) {
+                            if (!player.invincible && now - enemy.lastDamageTime > 1000) {
                                 loseHealth(msg, 'otsc_granted');
                                 enemy.lastDamageTime = now;
                             }
