@@ -51,6 +51,9 @@ const PROMOTION_MESSAGES = {
         // Placeholder URL for the image shown when the player dies
         const GAME_OVER_GRAPHIC_URL = 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/GameOver.png?v=1747943794163';
 
+        // Placeholder URL for the image shown when the player wins
+        const GAME_WIN_GRAPHIC_URL = 'PASTE_VICTORY_GRAPHIC_URL_HERE';
+
         let assets = {
             playerImage: null,
             playerImage5: null,
@@ -934,6 +937,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                     msgContainer.className = 'game_over_message_container game_win_message_container';
                     msgContainer.innerHTML = `
                         <div class="title">CONGRATULATIONS!</div>
+                        <img src="${GAME_WIN_GRAPHIC_URL}" alt="Victory" class="victory-graphic">
                         <div style="font-size: 0.7em; color: #4CAF50; margin-bottom: 10px;">All Tenants in Newark Have Been Evicted!</div>
                         <div class="restart-text">Press 'R' to Restart</div>
                     `;

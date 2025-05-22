@@ -102,6 +102,13 @@
             margin: 10px auto;
         }
 
+        .victory-graphic {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+
         #loadingMessage {
             position: absolute;
             top: 50%;
