@@ -52,7 +52,7 @@ const PROMOTION_MESSAGES = {
         const GAME_OVER_GRAPHIC_URL = 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/GameOver.png?v=1747943794163';
 
         // Placeholder URL for the image shown when the player wins
-        const GAME_WIN_GRAPHIC_URL = 'PASTE_VICTORY_GRAPHIC_URL_HERE';
+        const GAME_WIN_GRAPHIC_URL = 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/VictoryGraphic.png?v=1747948068899';
 
         let assets = {
             playerImage: null,
