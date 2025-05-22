@@ -24,7 +24,8 @@
         const TILE = 32;
         const SPRITE_SCALE = 1;
         const PLAYER_TARGET_HEIGHT = 2 * TILE * SPRITE_SCALE;
-        const TENANT_TARGET_HEIGHT = 2 * TILE * SPRITE_SCALE;
+        // Slightly larger tenants for added challenge
+        const TENANT_TARGET_HEIGHT = 2.5 * TILE * SPRITE_SCALE;
         const JUDGE_TARGET_HEIGHT = 2.5 * TILE * SPRITE_SCALE;
 
 const PROMOTION_THRESHOLDS = [5, 10, 15];
@@ -43,6 +44,9 @@ const PROMOTION_MESSAGES = {
             down10: 'PASTE_DOWN_BELOW_10_URL_HERE',
             down5: 'PASTE_DOWN_BELOW_5_URL_HERE'
         };
+
+        // Placeholder URL for the image shown when the player dies
+        const GAME_OVER_GRAPHIC_URL = 'PASTE_GAME_OVER_GRAPHIC_URL_HERE';
 
         let assets = {
             playerImage: null,
@@ -897,6 +901,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
                     msgContainer.className = 'game_over_message_container';
                     msgContainer.innerHTML = `
                         <div class="title">FIRED!</div>
+                        <img src="${GAME_OVER_GRAPHIC_URL}" alt="Game Over" class="game-over-graphic">
                         <div class="game-over-reason" style="font-size: 0.7em; color: #FF6347; margin-bottom: 10px;">Housing is a human right!</div>
                         <div class="restart-text">Press 'R' to Restart</div>
                     `;
