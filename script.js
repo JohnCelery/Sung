@@ -271,7 +271,7 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             const apartment5Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment1.png?v=1747834170065";
             const apartment6Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment6.png?v=1747862246016";
             const apartment7Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment7.png?v=1747862875612";
-            const apartment8Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment8.png?v=1747864054866";
+            const apartment8Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment8.png?v=1747912124909";
             const apartment9Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment9.png?v=1747864059985";
             const apartment10Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment10.png?v=1747864362526";
             const apartment11Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment11.png?v=1747864790388";
