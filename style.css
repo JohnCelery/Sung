@@ -127,8 +127,24 @@
             z-index: 250;
         }
 
-        @keyframes fadeOutMessage {
-            0% { opacity: 1; transform: translateY(0); }
-            70% { opacity: 1; transform: translateY(-20px); }
-            100% { opacity: 0; transform: translateY(-40px); }
-        }
+@keyframes fadeOutMessage {
+    0% { opacity: 1; transform: translateY(0); }
+    70% { opacity: 1; transform: translateY(-20px); }
+    100% { opacity: 0; transform: translateY(-40px); }
+}
+
+.power-up-graphic {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: powerUpExpand 1s forwards;
+    z-index: 350;
+    pointer-events: none;
+}
+
+@keyframes powerUpExpand {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}

@@ -27,11 +27,21 @@
         const TENANT_TARGET_HEIGHT = 2 * TILE * SPRITE_SCALE;
         const JUDGE_TARGET_HEIGHT = 2.5 * TILE * SPRITE_SCALE;
 
-        const PROMOTION_THRESHOLDS = [5, 10, 15];
-        const PROMOTION_MESSAGES = {
-            5: "PROMOTED: SENIOR ASSOCIATE!",
-            10: "PROMOTED: PARTNER!",
-            15: "PROMOTED: NAME PARTNER!"
+const PROMOTION_THRESHOLDS = [5, 10, 15];
+const PROMOTION_MESSAGES = {
+    5: "PROMOTED: SENIOR ASSOCIATE!",
+    10: "PROMOTED: PARTNER!",
+    15: "PROMOTED: NAME PARTNER!"
+};
+
+        // Placeholder URLs for power up/down graphics. Replace with real URLs.
+        const POWER_GRAPHICS = {
+            up5: 'PASTE_UP_LEVEL_5_URL_HERE',
+            up10: 'PASTE_UP_LEVEL_10_URL_HERE',
+            up15: 'PASTE_UP_LEVEL_15_URL_HERE',
+            down15: 'PASTE_DOWN_BELOW_15_URL_HERE',
+            down10: 'PASTE_DOWN_BELOW_10_URL_HERE',
+            down5: 'PASTE_DOWN_BELOW_5_URL_HERE'
         };
 
         let assets = {
@@ -62,6 +72,8 @@
         };
         let assetsToLoad = 0;
         let assetsLoaded = 0;
+
+        let gamePaused = false;
 
         let player = {
             x: 50, y: GROUND_LEVEL - 40,
@@ -590,16 +602,51 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             setScaledSpriteDimensions(player, player.img, PLAYER_TARGET_HEIGHT);
         }
 
+        function pauseWithGraphic(url, callback) {
+            if (!url) { if (callback) callback(); return; }
+            if (gamePaused) { if (callback) callback(); return; }
+            gamePaused = true;
+            const img = document.createElement('img');
+            img.src = url;
+            img.className = 'power-up-graphic';
+            gameContainer.appendChild(img);
+            setTimeout(() => {
+                if (gameContainer.contains(img)) gameContainer.removeChild(img);
+                gamePaused = false;
+                if (callback) callback();
+            }, 1200); // under 1.5s
+        }
+
+        function getPowerUpGraphic(newHealth) {
+            switch (newHealth) {
+                case 5: return POWER_GRAPHICS.up5;
+                case 10: return POWER_GRAPHICS.up10;
+                case 15: return POWER_GRAPHICS.up15;
+                default: return null;
+            }
+        }
+
+        function getPowerDownGraphic(prevHealth, newHealth) {
+            if (prevHealth >= 15 && newHealth < 15) return POWER_GRAPHICS.down15;
+            if (prevHealth >= 10 && newHealth < 10) return POWER_GRAPHICS.down10;
+            if (prevHealth >= 5 && newHealth < 5) return POWER_GRAPHICS.down5;
+            return null;
+        }
+
         function gainHealth() {
             if (player.health < player.maxHealth) {
                 const prev = player.health;
                 player.health++;
-                if (PROMOTION_THRESHOLDS.includes(player.health)) {
-                    addGameMessage(PROMOTION_MESSAGES[player.health], player.x, player.y - 20, 'promotion');
-                }
-                updatePlayerImage();
-                updatePlayerSize();
-                updateHealthDisplay();
+                const after = () => {
+                    if (PROMOTION_THRESHOLDS.includes(player.health)) {
+                        addGameMessage(PROMOTION_MESSAGES[player.health], player.x, player.y - 20, 'promotion');
+                    }
+                    updatePlayerImage();
+                    updatePlayerSize();
+                    updateHealthDisplay();
+                };
+                const graphic = getPowerUpGraphic(player.health);
+                if (graphic) pauseWithGraphic(graphic, after); else after();
             }
         }
 
@@ -607,13 +654,17 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             if (player.health > 1) {
                 const prev = player.health;
                 player.health--;
-                if (PROMOTION_THRESHOLDS.some(t => prev >= t && player.health < t)) {
-                    addGameMessage('DEMOTED', player.x, player.y - 20, 'demotion');
-                }
-                updatePlayerImage();
-                updatePlayerSize();
-                updateHealthDisplay();
-                addGameMessage(reason, player.x, player.y - 20, typeClass);
+                const after = () => {
+                    if (PROMOTION_THRESHOLDS.some(t => prev >= t && player.health < t)) {
+                        addGameMessage('DEMOTED', player.x, player.y - 20, 'demotion');
+                    }
+                    updatePlayerImage();
+                    updatePlayerSize();
+                    updateHealthDisplay();
+                    addGameMessage(reason, player.x, player.y - 20, typeClass);
+                };
+                const graphic = getPowerDownGraphic(prev, player.health);
+                if (graphic) pauseWithGraphic(graphic, after); else after();
             } else {
                 setGameOver(reason);
             }
@@ -865,6 +916,18 @@ const GAVEL_HEIGHT = 8 * SPRITE_SCALE;
             lastTime = timestamp;
             if (gameWon) { drawWinMessage(); return; }
             if (gameOver && !player.isAlive) { drawGameOverMessage(); return; }
+            if (gamePaused) {
+                ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                drawBackground();
+                drawPlatforms();
+                updateCamera();
+                drawPlayer();
+                drawEnemies();
+                drawWinMessage();
+                drawGameOverMessage();
+                requestAnimationFrame(gameLoop);
+                return;
+            }
             ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
             
             drawBackground(); 
