@@ -5,10 +5,9 @@ const loadingMessageElement = document.getElementById('loadingMessage');
 const healthDisplay = document.getElementById('healthDisplay');
 const evictionDisplay = document.getElementById('evictionTally');
 const characterSelect = document.getElementById('characterSelect');
-const mobileControls = document.getElementById('mobileControls');
-const btnLeft = document.getElementById('btnLeft');
-const btnRight = document.getElementById('btnRight');
-const btnJump = document.getElementById('btnJump');
+// Elements for dynamic mobile controls will be queried later
+let touchControls, btnLeft, btnRight, btnJump;
+// Basic feature detection for touch devices
 const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 let selectedCharacter = 'sung';
 
@@ -19,18 +18,26 @@ canvas.height = GAME_HEIGHT;
 gameContainer.style.width = `${GAME_WIDTH}px`;
 gameContainer.style.height = `${GAME_HEIGHT}px`;
 
-function resizeGame() {
-    const ww = window.innerWidth;
-    const wh = window.innerHeight;
-    const scale = Math.min(ww / GAME_WIDTH, wh / GAME_HEIGHT);
-    gameContainer.style.transform = `scale(${scale})`;
-    gameContainer.style.transformOrigin = 'top left';
-    gameContainer.style.left = ((ww - GAME_WIDTH * scale) / 2) + 'px';
-    gameContainer.style.top = ((wh - GAME_HEIGHT * scale) / 2) + 'px';
+// New responsive canvas setup
+function setupResponsiveCanvas() {
+    const rotatePrompt = document.getElementById('rotatePrompt');
+    function onResize() {
+        const ww = window.innerWidth;
+        const wh = window.innerHeight;
+        const scale = Math.min(ww / GAME_WIDTH, wh / GAME_HEIGHT);
+        gameContainer.style.transform = `scale(${scale})`;
+        gameContainer.style.transformOrigin = 'top left';
+        gameContainer.style.left = ((ww - GAME_WIDTH * scale) / 2) + 'px';
+        gameContainer.style.top = ((wh - GAME_HEIGHT * scale) / 2) + 'px';
+
+        if (isTouchDevice && rotatePrompt) {
+            rotatePrompt.style.display = wh > ww ? 'flex' : 'none';
+        }
+    }
+    window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', onResize);
+    onResize();
 }
-window.addEventListener('resize', resizeGame);
-window.addEventListener('orientationchange', resizeGame);
-resizeGame();
 
         let WORLD_WIDTH = 3000;
         const SEGMENT_WIDTH = 1800;
@@ -237,9 +244,15 @@ const tenantHitMessages = [
 
 const keys = { left: false, right: false, up: false };
 
+// Create and wire up on-screen controls for touch devices
 function setupMobileControls() {
-    if (!isTouchDevice || !mobileControls) return;
-    mobileControls.style.display = 'flex';
+    if (!isTouchDevice) return;
+    touchControls = document.getElementById('touchControls');
+    btnLeft = document.getElementById('touchLeft');
+    btnRight = document.getElementById('touchRight');
+    btnJump = document.getElementById('touchJump');
+    if (!touchControls || !btnLeft || !btnRight || !btnJump) return;
+    touchControls.style.display = 'flex';
     const prevent = e => e.preventDefault();
     btnLeft.addEventListener('touchstart', e => { prevent(e); keys.left = true; });
     btnLeft.addEventListener('touchend', e => { prevent(e); keys.left = false; });
@@ -1052,6 +1065,7 @@ window.addEventListener('DOMContentLoaded', function() {
             loadAllAssets();
         });
     });
+    // Initialize optional mobile controls and responsive scaling
     setupMobileControls();
-    resizeGame();
+    setupResponsiveCanvas();
 });
