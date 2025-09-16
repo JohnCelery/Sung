@@ -1,0 +1,44 @@
+{
+  "ui": [
+    {
+      "id": "ui-logo",
+      "label": "Trail Emblem",
+      "description": "A maple leaf on a highway shield.",
+      "width": 320,
+      "height": 180,
+      "palette": ["#0353a4", "#89cff0", "#ffffff"]
+    },
+    {
+      "id": "ui-event",
+      "label": "Story Beat",
+      "width": 200,
+      "height": 200,
+      "palette": ["#f2542d", "#ffd166", "#ffffff"]
+    }
+  ],
+  "sprites": [
+    {
+      "id": "sprite-minivan",
+      "label": "Minivan",
+      "width": 256,
+      "height": 128,
+      "palette": ["#1f8a70", "#033b4a", "#ffffff"]
+    },
+    {
+      "id": "sprite-pickup",
+      "label": "Pickup",
+      "width": 256,
+      "height": 128,
+      "palette": ["#f2a359", "#8d5a2d", "#ffffff"]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene-northern-lights",
+      "label": "Northern Lights",
+      "width": 512,
+      "height": 288,
+      "palette": ["#1b3a4b", "#144552", "#9bf6ff"]
+    }
+  ]
+}
