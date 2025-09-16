@@ -1,0 +1,150 @@
+{
+  "start": "halifax",
+  "nodes": [
+    {
+      "id": "halifax",
+      "name": "Halifax, Nova Scotia",
+      "province": "Nova Scotia",
+      "description": "Atlantic salt air, fog horns, and a van full of possibility.",
+      "biome": "coastal",
+      "eventTags": ["maritime", "harbour"],
+      "connections": ["fundy", "pei-ferry"],
+      "eventChance": 0.9
+    },
+    {
+      "id": "pei-ferry",
+      "name": "Wood Islands Ferry",
+      "province": "Prince Edward Island",
+      "description": "Seagulls orbit as you queue for the crossing to the island red soils.",
+      "biome": "coastal",
+      "eventTags": ["ferry", "maritime"],
+      "connections": ["halifax", "fundy"]
+    },
+    {
+      "id": "fundy",
+      "name": "Fundy Tidal Flats",
+      "province": "New Brunswick",
+      "description": "Bay of Fundy tides expose a vast mud plain dotted with driftwood.",
+      "biome": "tidal",
+      "eventTags": ["coastal", "wildlife"],
+      "connections": ["halifax", "pei-ferry", "fredericton"]
+    },
+    {
+      "id": "fredericton",
+      "name": "Fredericton",
+      "province": "New Brunswick",
+      "description": "Victorian brick, river fog, and a gas station with questionable coffee.",
+      "biome": "forest",
+      "eventTags": ["forest", "town"],
+      "connections": ["fundy", "montreal"]
+    },
+    {
+      "id": "montreal",
+      "name": "Montréal",
+      "province": "Québec",
+      "description": "Neon bagel signs blur past as traffic merges toward the island core.",
+      "biome": "urban",
+      "eventTags": ["urban", "food"],
+      "connections": ["fredericton", "ottawa"]
+    },
+    {
+      "id": "ottawa",
+      "name": "Ottawa",
+      "province": "Ontario",
+      "description": "Parliament Hill glitters across the river; the van idles dutifully.",
+      "biome": "urban",
+      "eventTags": ["urban", "bureaucracy"],
+      "connections": ["montreal", "sault-ste-marie"]
+    },
+    {
+      "id": "sault-ste-marie",
+      "name": "Sault Ste. Marie",
+      "province": "Ontario",
+      "description": "Lake Superior spray clings to the van as you chart a northern route.",
+      "biome": "lakeshore",
+      "eventTags": ["lakeshore", "mechanic"],
+      "connections": ["ottawa", "winnipeg"]
+    },
+    {
+      "id": "winnipeg",
+      "name": "Winnipeg",
+      "province": "Manitoba",
+      "description": "Prairie winds buffet the Forks; the crew scavenges bannock and jokes.",
+      "biome": "prairie",
+      "eventTags": ["prairie", "wind"],
+      "connections": ["sault-ste-marie", "regina", "churchill"]
+    },
+    {
+      "id": "churchill",
+      "name": "Churchill",
+      "province": "Manitoba",
+      "description": "The Hudson Bay line ends with polar bear warnings and aurora forecasts.",
+      "biome": "arctic",
+      "eventTags": ["wildlife", "arctic"],
+      "connections": ["winnipeg"]
+    },
+    {
+      "id": "regina",
+      "name": "Regina",
+      "province": "Saskatchewan",
+      "description": "Big sky meets prairie grain elevators and a rest stop with perogies.",
+      "biome": "prairie",
+      "eventTags": ["prairie", "town"],
+      "connections": ["winnipeg", "calgary"]
+    },
+    {
+      "id": "calgary",
+      "name": "Calgary",
+      "province": "Alberta",
+      "description": "Cowtown towers reflect the Rockies looming to the west.",
+      "biome": "foothills",
+      "eventTags": ["urban", "mechanic"],
+      "connections": ["regina", "banff", "edmonton"]
+    },
+    {
+      "id": "edmonton",
+      "name": "Edmonton",
+      "province": "Alberta",
+      "description": "Festival banners and river valley trails tempt a longer stay.",
+      "biome": "urban",
+      "eventTags": ["urban", "culture"],
+      "connections": ["calgary", "yellowknife"]
+    },
+    {
+      "id": "yellowknife",
+      "name": "Yellowknife",
+      "province": "Northwest Territories",
+      "description": "Permafrost roads and northern lights test the van's heater.",
+      "biome": "taiga",
+      "eventTags": ["arctic", "wildlife"],
+      "connections": ["edmonton"]
+    },
+    {
+      "id": "banff",
+      "name": "Banff",
+      "province": "Alberta",
+      "description": "Glacier melt streams shimmer beside the Trans-Canada through the Rockies.",
+      "biome": "mountain",
+      "eventTags": ["mountain", "park"],
+      "connections": ["calgary", "kamloops"]
+    },
+    {
+      "id": "kamloops",
+      "name": "Kamloops",
+      "province": "British Columbia",
+      "description": "Desert hills roll past as you hunt for a ranch-style motel.",
+      "biome": "semi-arid",
+      "eventTags": ["mountain", "rest"],
+      "connections": ["banff", "vancouver"]
+    },
+    {
+      "id": "vancouver",
+      "name": "Vancouver",
+      "province": "British Columbia",
+      "description": "Rain-slick streets lead to the Pacific, cedar and salt in the air.",
+      "biome": "coastal",
+      "eventTags": ["coastal", "urban"],
+      "connections": ["kamloops"]
+    }
+  ]
+}

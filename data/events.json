@@ -1,0 +1,89 @@
+{
+  "events": [
+    {
+      "id": "roadside-poutine",
+      "title": "Roadside Poutine Stand",
+      "description": "A red food truck waves you down with the promise of squeaky cheese curds and hot gravy.",
+      "tags": ["urban", "food", "town"],
+      "chance": 0.85,
+      "choices": [
+        {
+          "id": "splurge",
+          "label": "Splurge on a family-size box",
+          "description": "Spend $2 to boost everyone's morale and energy.",
+          "requires": [
+            { "type": "resource", "resource": "money", "value": 2, "operator": ">=" }
+          ],
+          "effects": [
+            { "type": "resource", "resource": "money", "delta": -2 },
+            { "type": "resource", "resource": "snacks", "delta": 2 },
+            { "type": "log", "message": "The crew debates the best curds-to-gravy ratio." }
+          ],
+          "outcome": "Bellies warm and spirits high, you roll onward with sticky fingers."
+        },
+        {
+          "id": "budget",
+          "label": "Ask for samples only",
+          "description": "Nibble just enough to keep morale steady.",
+          "effects": [
+            { "type": "resource", "resource": "snacks", "delta": 1 },
+            { "type": "log", "message": "A sympathetic vendor slips extra fries into the sample boat." }
+          ],
+          "outcome": "Not quite a meal, but the salt tide keeps fatigue away for another leg."
+        },
+        {
+          "id": "drive-on",
+          "label": "Wave and keep driving",
+          "description": "Save money for gas and repairs.",
+          "effects": [
+            { "type": "log", "message": "You promise the crew a feast at the next major stop." }
+          ],
+          "outcome": "The van smells faintly of gravy regret."
+        }
+      ]
+    },
+    {
+      "id": "black-ice",
+      "title": "Black Ice on the Shoulder",
+      "description": "A sudden cold snap has glazed the next stretch of road in invisible ice.",
+      "tags": ["coastal", "mountain", "arctic"],
+      "chance": 0.75,
+      "choices": [
+        {
+          "id": "crawl",
+          "label": "Crawl forward at a snail's pace",
+          "description": "Burn extra gas but protect the van.",
+          "effects": [
+            { "type": "resource", "resource": "gas", "delta": -1 },
+            { "type": "log", "message": "Hazard lights blink as you inch past the frosted bend." }
+          ],
+          "outcome": "Progress is slow, but the ride stays intact."
+        },
+        {
+          "id": "send-it",
+          "label": "Maintain speed and trust your reflexes",
+          "description": "Risk sliding to save time.",
+          "effects": [
+            { "type": "resource", "resource": "ride", "delta": -2 },
+            { "type": "resource", "resource": "gas", "delta": -1 },
+            { "type": "log", "message": "The van fishtails before catching traction near a snowbank." }
+          ],
+          "outcome": "You power through, but the shocks complain loudly."
+        },
+        {
+          "id": "camp",
+          "label": "Pull over and camp until sunrise",
+          "description": "Spend snacks to wait it out and maybe spot aurora.",
+          "requires": [
+            { "type": "resource", "resource": "snacks", "value": 1, "operator": ">=" }
+          ],
+          "effects": [
+            { "type": "resource", "resource": "snacks", "delta": -1 },
+            { "type": "log", "message": "You brew cocoa, watch the sky dance, and wait for salt trucks." }
+          ],
+          "outcome": "The dawn thaw makes for safer progress, even if you're running lean on snacks."
+        }
+      ]
+    }
+  ]
+}

@@ -1,40 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Eviction Bros - Downtown Newark</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="gameContainer">
-        <canvas id="gameCanvas"></canvas>
-        <div id="loadingMessage" style="display: none;">Loading Assets...</div>
-        <div id="healthDisplay">Health: 1</div>
-        <div id="evictionTally">Evictions: 0</div>
-        <div id="characterSelect" class="overlay">
-            <h2>Select Your Character</h2>
-            <div class="character-options">
-                <button class="character-option" data-char="matt">Matt</button>
-                <button class="character-option" data-char="sung">Sung</button>
-            </div>
-        </div>
-        <!-- Mobile touch controls container -->
-        <div id="touchControls" class="touch-controls" style="display:none;">
-            <div class="dir-controls">
-                <button id="touchLeft">&#9664;</button>
-                <button id="touchRight">&#9654;</button>
-            </div>
-            <button id="touchJump" class="jump">&#9650;</button>
-        </div>
-        <!-- Message shown when a mobile device is in portrait mode -->
-        <div id="rotatePrompt" style="display:none;">Rotate device</div>
-        </div>
-    <div id="instructions">
-        <h2>How to Play Super Eviction Bros:</h2>
-        <p><strong>Note:</strong> To use your own images, paste the full URLs for each image into the `loadAllAssets` function in the code. You can adjust building sizes in `initGame`. Sprites are scaled to hitboxes. Placeholders appear if loading fails.</p>
-    </div>
-
-    <script src="script.js"></script>
-</body>
+<html lang="en" data-color-scheme="auto">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Canadian Trail: Out There, Eh?</title>
+    <meta
+      name="description"
+      content="Canadian Trail: a deterministic, Canadian road-trip roguelike inspired by Out There."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#app">Skip to main content</a>
+    <noscript>
+      <p class="noscript">This experience requires JavaScript to run. Please enable it to play.</p>
+    </noscript>
+    <main id="app" role="main" tabindex="-1" aria-live="polite"></main>
+    <script type="module">
+      import('./main.js').catch((error) => {
+        console.error('Failed to load Canadian Trail', error);
+        const app = document.getElementById('app');
+        if (app) {
+          app.innerHTML = `<section class="screen screen--error" role="alert">` +
+            `<h1>We hit a pothole</h1>` +
+            `<p>Reload the page to try again.</p>` +
+            `</section>`;
+        }
+      });
+    </script>
+  </body>
 </html>
