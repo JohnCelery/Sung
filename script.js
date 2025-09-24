@@ -63,21 +63,21 @@ const PROMOTION_MESSAGES = {
 
         // Placeholder URLs for power up/down graphics. Replace with real URLs.
         const POWER_GRAPHICS = {
-            up5: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/UpLevel5.png?v=1747927417640',
-            up10: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/UpLevel10.png?v=1747927586521',
-            up15: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/UpLevel15.png?v=1747938696154',
-            up25: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/UpLevel25.png?v=1747943081893',
-            down15: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/DownLevel10.png?v=1747938749600',
-            down10: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/DownLevel5.png?v=1747938831848',
-            down5: 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/DownLevel1.png?v=1747939554005',
-            down25: 'PASTE_DOWN_BELOW_25_URL_HERE'
+            up5: 'power_to_senior_associate.png',
+            up10: 'power_to_partner.png',
+            up15: 'power_to_name_partner.png',
+            up25: 'managing_partner_powerup.png',
+            down15: 'demo_to_partner.png',
+            down10: 'demo_to_senior_associate.png',
+            down5: 'demo_to_associate.png',
+            down25: 'demo_to_partner.png'
         };
 
         // Placeholder URL for the image shown when the player dies
-        const GAME_OVER_GRAPHIC_URL = 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/GameOver.png?v=1747943794163';
+        const GAME_OVER_GRAPHIC_URL = 'gameover_screen1.png';
 
         // Placeholder URL for the image shown when the player wins
-        const GAME_WIN_GRAPHIC_URL = 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/VictoryGraphic.png?v=1747948068899';
+        const GAME_WIN_GRAPHIC_URL = 'win_screen.png';
 
         let assets = {
             playerImage: null,
@@ -360,48 +360,51 @@ function setupMobileControls() {
             loadingMessageElement.style.display = 'block'; 
             assetsToLoad = 0; assetsLoaded = 0;
 
-            // --- PASTE YOUR FULL IMAGE URLs HERE ---
-            const sungImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/sung.png?v=1747832341324";
-            const mattImageUrl = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/matt2.png?v=1747857386593";
-            // --- Placeholder URLs for promotions ---
-            const sungLevel5Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/SungLevel5.png?v=1747914134048";
-            const sungLevel10Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/SungLevel10.png?v=1747914425322";
-            const sungLevel15Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/SungLevel15.png?v=1747914802560";
-            const mattLevel5Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel5.png?v=1747913492251";
-            const mattLevel10Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel10.png?v=1747913776047";
-            const mattLevel15Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/MattLevel15.png?v=1747914006982";
-            const level25Url = 'https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/ManagingPartner.png?v=1747940239836';
+            // --- IMAGE FILES LOADED FROM THE REPOSITORY ---
+            const sungImageUrl = "sung_senior_associate.png";
+            const mattImageUrl = "matt_associate.png";
+            const sungLevel5Url = "sung_partner.png";
+            const sungLevel10Url = "sung_name_partner.png";
+            const sungLevel15Url = "sung_name_partner.png";
+            const mattLevel5Url = "matt_senior_associate.png";
+            const mattLevel10Url = "matt_partner.png";
+            const mattLevel15Url = "matt_name_partner.png";
+            const level25Url = 'managing_partner_sprite.png';
             const tenantUrls = [
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant2.png?v=1747857286015",
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant1.png?v=1747832331684",
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant3.png?v=1747857319633",
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant4.png?v=1747857755445",
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant5.png?v=1747861166694",
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant6.png?v=1747861175090",
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant7.png?v=1747861180790",
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant8.png?v=1747861187977",
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant9.png?v=1747861195744",
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant10.png?v=1747861210121",
-                "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/tenant11.png?v=1747861216369"
+                "tenant1.png",
+                "tenant2.png",
+                "tenant3.png",
+                "tenant4.png",
+                "tenant5.png",
+                "tenant6.png",
+                "tenant7.png",
+                "tenant8.png",
+                "tenant9.png",
+                "tenant10.png",
+                "tenant11.png",
+                "tenant12.png",
+                "tenant13.png",
+                "tenant14.png",
+                "tenant15.png"
             ];
-            const judgeGavelUpImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/judge_gavel_up.png?v=1747832367574";   
-            const judgeGavelDownImageUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/judge_gavel_down.png?v=1747832359174";   
-            const backgroundUrl = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/background2.png?v=1747848722965";
-            const apartment1Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment5.png?v=1747834222439";
-            const apartment2Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment4.png?v=1747834188867";
-            const apartment3Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment3.png?v=1747834182727";
-            const apartment4Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment2.png?v=1747834176029";
-            const apartment5Url = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/apartment1.png?v=1747834170065";
-            const apartment6Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment6.png?v=1747862246016";
-            const apartment7Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment7.png?v=1747862875612";
-            const apartment8Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/Apartment8.png?v=1747938717870";
-            const apartment9Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment9.png?v=1747864059985";
-            const apartment10Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment10.png?v=1747864362526";
-            const apartment11Url = "https://cdn.glitch.global/55dda445-084e-4331-804f-1d4d30d68359/apartment11.png?v=1747864790388";
-            const courthouseUrl = "https://cdn.glitch.global/011db0f0-56c6-48a7-a8b0-27f2425e6bf7/courthouse.png?v=1747834164056";
-            const platformTexture1Url = "https://cdn.glitch.global/a5785753-17af-4b26-97de-a03aca9da4c7/ambulance.png?v=1747842095209"; // Metal balcony texture
-            const platformTexture2Url = "https://cdn.glitch.global/a5785753-17af-4b26-97de-a03aca9da4c7/police.png?v=1747842118310"; // Scaffolding texture
-            // --- END OF URLS TO PASTE ---
+            const judgeGavelUpImageUrl = "judge_up.png";
+            const judgeGavelDownImageUrl = "judge_down.png";
+            const backgroundUrl = "background2.png";
+            const apartment1Url = "building1.png";
+            const apartment2Url = "building2.png";
+            const apartment3Url = "building3.png";
+            const apartment4Url = "building4.png";
+            const apartment5Url = "building5.png";
+            const apartment6Url = "building6.png";
+            const apartment7Url = "building7.png";
+            const apartment8Url = "building8.png";
+            const apartment9Url = "building4.png";
+            const apartment10Url = "building5.png";
+            const apartment11Url = "building6.png";
+            const courthouseUrl = "building8.png";
+            const platformTexture1Url = "ambulance.png"; // Metal balcony texture
+            const platformTexture2Url = "cop_car.png"; // Scaffolding texture
+            // --- END OF IMAGE LIST ---
 
             const sungPlaceholder = `https://placehold.co/${player.width}x${player.height}/FFD700/000000?text=Sung`;
             const mattPlaceholder = `https://placehold.co/${player.width}x${player.height}/00BFFF/000000?text=Matt`;
